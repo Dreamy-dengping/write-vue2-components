@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <!-- <link
+      href="https://cdn.bootcdn.net/ajax/libs/tailwindcss/2.2.19/base.css"
+      rel="stylesheet"
+    /> -->
+  </head>
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to
+        continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+
+    <script>
+      // function MacInfo() {
+      //   //访问到WbemScripting对象
+      //   var locator = new ActiveXObject("WbemScripting.SWbemLocator");
+      //   //访问本地电脑
+      //   var service = locator.ConnectServer(".");
+      //   //获取我们需要的对象的记录集
+      //   var properties = service.ExecQuery(
+      //     "Select * from Win32_NetworkAdapterConfiguration Where IPEnabled =True"
+      //   );
+      //   var e = new Enumerator(properties);
+      //   {
+      //     var p = e.item();
+      //     var mac = p.MACAddress;
+      //     alert("MAC地址:" + mac);
+      //   }
+      // }
+      // MacInfo();
+    </script>
+  </body>
+</html>
