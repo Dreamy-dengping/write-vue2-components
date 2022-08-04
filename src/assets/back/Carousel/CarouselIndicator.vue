@@ -1,5 +1,4 @@
 <template>
-<!-- 指示器在当前活跃的时候高亮显示，点击的时候发布切换事件逻辑 -->
   <div class="carousel-indicator">
     <span
       v-for="(item, index) in length"
@@ -13,12 +12,10 @@
 <script>
 export default {
   props: {
-    // 数据长度
     length: {
       type: Number,
       default: 0,
     },
-    // 当前活跃项
     currentIndex: {
       type: Number,
       default: 0,

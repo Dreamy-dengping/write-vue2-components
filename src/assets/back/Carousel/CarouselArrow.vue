@@ -1,5 +1,4 @@
 <template>
-  <!-- 点击的时候进行切换，发布事件给 Carousel组件-->
   <div class="carousel-arrow" @click="$emit('click')">
     <slot></slot>
   </div>

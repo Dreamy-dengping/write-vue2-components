@@ -42,9 +42,9 @@
 </template>
 
 <script>
-import Pubsub from "./utils";//跨组件通信，本质发布订阅
-import CarouselIndicator from "./CarouselIndicator.vue";//指示器
-import CarouselArrow from "./CarouselArrow.vue";//切换剪头
+import Pubsub from "./utils";
+import CarouselIndicator from "./CarouselIndicator.vue";
+import CarouselArrow from "./CarouselArrow.vue";
 export default {
   components: { CarouselIndicator, CarouselArrow },
   props: {
@@ -86,18 +86,13 @@ export default {
   },
   data() {
     return {
-      // 当前活跃项，用户可自定义，默认为0
       currentIndex: this.initialIndex || 0,
-      // 轮播定时器标识
       timer: null,
-      // 轮播项的数据长度，这里我们可以使用插槽获取到
       len: this.$slots.default.length,
-      // 当前箭头滑过的显示状态
       currentArrowStatus: false,
     };
   },
   mounted() {
-    // 挂载的时候就开始自动轮播
     this.autoPlay();
   },
   methods: {
@@ -118,7 +113,7 @@ export default {
           if (this.currentIndex < 0) {
             this.currentIndex = this.len - 1;
           }
-          //发布更新事件，告知CarouselItem组件进行切换
+          //发布更新事件
           Pubsub.notice("updateCurrentIndex", this.currentIndex);
           break;
         case "next":
@@ -127,11 +122,11 @@ export default {
           if (this.currentIndex >= this.len) {
             this.currentIndex = 0;
           }
-          //发布更新事件，告知CarouselItem组件进行切换
+          //发布更新事件
           Pubsub.notice("updateCurrentIndex", this.currentIndex);
           break;
       }
-      // 切换后发布change事件，告知用户，当前项已经切换了，参数为当前索引
+      // 切换后发布change事件，告知用户
       this.$emit("change", this.currentIndex);
     },
     // 切换箭头点击触发
