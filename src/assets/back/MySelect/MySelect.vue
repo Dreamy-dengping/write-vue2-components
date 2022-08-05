@@ -101,12 +101,6 @@ export default {
   components: {
     MyOption,
   },
-  provide() {
-    return {
-      // 将父组件实例注入到子组件，还是响应式的
-      select: this,
-    };
-  },
   props: {
     // 输入框文字是否居中显示
     textAlign: {
@@ -281,6 +275,10 @@ export default {
     value(val) {
       // 执行远程搜索逻辑
       this.remoteMethod(val);
+      // value变化通知option组件更新高亮组件
+      this.$emit("input", val);
+      this.activeValue = "";
+      this.broadcast("MyOption", "activeValueChange", val);
     },
   },
 };

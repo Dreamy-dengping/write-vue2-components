@@ -32,6 +32,7 @@
           :remote-method="remoteMethod"
           :remote-data-list="options2"
           :maxHeight="200"
+          @on-change="handleChange"
         >
           <my-option
             v-for="item in options2"
@@ -40,6 +41,18 @@
             :label="item.label"
           ></my-option>
         </my-select>
+      </div>
+      <div class="item">
+        <h2>element ui</h2>
+        <el-select v-model="currentFood" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
       </div>
     </div>
   </div>

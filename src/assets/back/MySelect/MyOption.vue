@@ -2,7 +2,7 @@
   <div
     :class="[
       'my-option-item',
-      select.value == value ? 'active-item' : '',
+      activeValue == value ? 'active-item' : '',
       disabled ? 'disbled-item' : '',
     ]"
     @click.stop="handleOptionsClick"
@@ -10,7 +10,7 @@
     <!-- 用户提供的插槽内容优先级更高 -->
     <slot v-if="$slots.default"></slot>
     <!-- 没提供插槽的时候，使用label占位 -->
-    <span v-else>{{ label }} </span>
+    <span v-else>{{ label }}</span>
   </div>
 </template>
 
@@ -20,7 +20,7 @@ import emitter from "./emitter";
 export default {
   name: "MyOption",
   componentName: "MyOption",
-  inject: ["select"],
+
   mixins: [emitter],
   props: {
     // 是否禁用
@@ -38,6 +38,18 @@ export default {
       type: String,
       default: "",
     },
+  },
+  data() {
+    return {
+      // 当前活跃项
+      activeValue: this.$parent.activeValue,
+    };
+  },
+  mounted() {
+    // 订阅更新当前activeValue的事件
+    this.$on("activeValueChange", (value) => {
+      this.activeValue = value;
+    });
   },
   methods: {
     // item项点击
