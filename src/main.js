@@ -5,10 +5,12 @@ Vue.config.productionTip = false;
 import myUi from "./components/index";
 import vInfiniteScroll from "./components/v-infinite-scroll";
 import ElementUI from "element-ui";
-import VueCookies from 'vue-cookies';
+import VueCookies from "vue-cookies";
 import "element-ui/lib/theme-chalk/index.css";
 Vue.use(ElementUI);
 Vue.use(vInfiniteScroll);
+
+Vue.prototype.$bus = new Vue();
 Vue.use(myUi);
 new Vue({
   render: (h) => h(App),

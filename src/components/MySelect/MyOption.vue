@@ -2,37 +2,64 @@
   <div
     :class="[
       'my-option-item',
-      activeValue == $attrs.value ? 'active-item' : '',
+      activeValue == value ? 'active-item' : '',
       disabled ? 'disbled-item' : '',
     ]"
     @click.stop="handleOptionsClick"
   >
-    <slot></slot>
+    <!-- 用户提供的插槽内容优先级更高 -->
+    <slot v-if="$slots.default"></slot>
+    <!-- 没提供插槽的时候，使用label占位 -->
+    <span v-else>{{ label }}</span>
   </div>
 </template>
 
 <script>
-import Pubsub from "./utils";
+import emitter from "./emitter";
+
 export default {
+  name: "MyOption",
+  componentName: "MyOption",
+
+  mixins: [emitter],
   props: {
+    // 是否禁用
     disabled: {
       type: Boolean,
       default: false,
     },
+    // label
+    label: {
+      type: String,
+      default: "",
+    },
+    // 绑定的value值
+    value: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
+      // 当前活跃项
       activeValue: this.$parent.activeValue,
     };
+  },
+  mounted() {
+    // 订阅更新当前activeValue的事件
+    this.$on("activeValueChange", (value) => {
+      this.activeValue = value;
+    });
   },
   methods: {
     // item项点击
     handleOptionsClick() {
       // 禁用项点击，直接终止后续操作
       if (this.disabled) return;
-      Pubsub.notice("onChange", this.$attrs.value || "");
+      this.dispatch("MySelect", "onChange", this.value || "");
     },
   },
+  watch: {},
 };
 </script>
 

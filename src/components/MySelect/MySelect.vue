@@ -14,7 +14,7 @@
       />
       <div
         class="icon-wrap"
-        @mouseenter="value.length > 0 ? (showCancel = true) : ''"
+        @mouseenter="value.length > 0 && clearable ? (showCancel = true) : ''"
         @mouseout="showCancel = false"
       >
         <!-- 输入框下拉箭头 -->
@@ -34,39 +34,70 @@
     <transition name="el-zoom-in-top">
       <div
         class="select-options-slots"
-        :style="{ textAlign: textAlign }"
-        v-if="showOptions"
+        :style="{
+          textAlign: textAlign,
+          maxHeight: maxHeight + 'px',
+          overflow: 'auto',
+        }"
+        v-show="showOptions"
       >
-        <!-- 搜索时展示 -->
+        <!-- 本地搜索时展示 -->
         <template
-          v-if="filterResultList.length && isSearchIn && value.length > 0"
+          v-if="
+            !remote && filterResultList.length && isSearchIn && value.length > 0
+          "
         >
           <my-option
             v-for="item in filterResultList"
             :value="item.value"
             :key="item.value"
-            >{{ item.value }}</my-option
-          >
+            :label="item.label"
+          ></my-option>
+        </template>
+        <!-- 远程搜索时展示 -->
+        <template v-if="remote && remoteDataList.length && !loading">
+          <my-option
+            v-for="item in remoteDataList"
+            :value="item.value"
+            :key="item.value"
+            :label="item.label"
+          ></my-option>
         </template>
         <!-- 外部下拉项插槽 -->
-        <slot v-if="value.length == 0 || !isSearchIn"></slot>
+        <slot
+          v-if="
+            !remote &&
+            (value.length == 0 || !isSearchIn) &&
+            filterDataList.length
+          "
+        ></slot>
         <!-- 搜索为空 -->
         <div
           class="select-empty"
-          v-if="!filterResultList.length && isSearchIn && value.length > 0"
+          v-if="
+            (!loading &&
+              !remote &&
+              ((!filterResultList.length && isSearchIn && value.length > 0) ||
+                !filterDataList.length)) ||
+            (remote && !remoteDataList.length && !loading)
+          "
         >
           暂无数据
         </div>
+        <!-- 加载中状态 -->
+        <div class="select-loading" v-if="loading">加载中...</div>
       </div>
     </transition>
   </div>
 </template>
 
 <script>
-import Pubsub from "./utils";
 import MyOption from "./MyOption.vue";
+import emitter from "./emitter";
 export default {
   name: "MySelect",
+  componentName: "MySelect",
+  mixins: [emitter],
   components: {
     MyOption,
   },
@@ -101,6 +132,33 @@ export default {
       type: Boolean,
       default: false,
     },
+    // 下来最大高度，下拉数据太长之后，超出显示滚动条
+    maxHeight: {
+      type: [String, Number],
+      default: "auto",
+    },
+    // 可远程搜索
+    remote: {
+      type: Boolean,
+      default: false,
+    },
+    // 远程搜索函数
+    remoteMethod: {
+      type: Function,
+      default: () => {},
+    },
+    // 搜索loading
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+    // 远程搜索时候的需要执行的搜索函数
+    remoteDataList: {
+      type: Array,
+      default: () => {
+        return [];
+      },
+    },
   },
   data() {
     return {
@@ -112,12 +170,12 @@ export default {
       readonly: "",
       // 显示取消
       showCancel: false,
+      // 是否处于搜索
+      isSearchIn: false,
       // 需要搜索是的数据
       filterDataList: [],
       // 搜索结果
       filterResultList: [],
-      // 是否处于搜索状态
-      isSearchIn: false,
     };
   },
   computed: {
@@ -132,8 +190,7 @@ export default {
   methods: {
     //初始化
     init() {
-      // 订阅item项点击事件
-      Pubsub.subscribe("onChange", (value) => {
+      this.$on("onChange", (value) => {
         this.handleOptionsHandler(value);
       });
       // window点击关闭下拉
@@ -142,8 +199,10 @@ export default {
         this.handleCloseOptions.bind(this),
         false
       );
-      // 初始搜索数据
-      this.filterable && this.getSearchData();
+      // 初始下拉数据
+      this.getSearchData();
+      // 当前value和下拉数据对比
+      this.setActiveOption();
     },
     // item项点击
     handleOptionsHandler(value) {
@@ -168,6 +227,8 @@ export default {
       this.showCancel = false;
       // 关闭下拉选项
       this.showOptions = false;
+      // 发布change事件，将value抛出给外部使用
+      this.$emit("on-change", "");
     },
     // 组件之外点击关闭下来
     handleCloseOptions() {
@@ -181,13 +242,19 @@ export default {
     },
     // 初始化搜索数据
     getSearchData() {
-      this.filterDataList = this.$slots.default.map((vnode) => {
-        const value = vnode.data.attrs.value;
-        return {
-          value,
-          key: vnode.key,
-        };
-      });
+      // 判空处理，可能没下来数据
+      if (this.$slots.default) {
+        // 组装数据，供搜索使用
+        this.filterDataList = this.$slots.default.map((vnode) => {
+          // 从插槽中的componentOptions.proprsData中可以拿到组件对应的props
+          const value = vnode.componentOptions?.propsData?.value,
+            label = vnode.componentOptions?.propsData?.label;
+          return {
+            value,
+            label,
+          };
+        });
+      }
     },
     // 搜索数据
     setSearchData(value) {
@@ -195,6 +262,23 @@ export default {
       this.filterResultList = this.filterDataList.filter((item) =>
         item.value.includes(value)
       );
+    },
+    // 初始化设置高亮item
+    setActiveOption() {
+      const activeOption = this.filterDataList.find((item) => {
+        return item.value == this.value;
+      });
+      !activeOption && this.$emit("input", "");
+    },
+  },
+  watch: {
+    value(val) {
+      // 执行远程搜索逻辑
+      this.remoteMethod(val);
+      // value变化通知option组件更新高亮组件
+      this.$emit("input", val);
+      this.activeValue = "";
+      this.broadcast("MyOption", "activeValueChange", val);
     },
   },
 };
@@ -242,7 +326,8 @@ export default {
     margin: 5px 0;
     width: 100%;
   }
-  .select-empty {
+  .select-empty,
+  .select-loading {
     text-align: center;
     padding: 10px 0;
     margin: 0;
@@ -250,6 +335,7 @@ export default {
     color: #999;
     font-size: 14px;
   }
+  //S iconfont字体
   @font-face {
     font-family: "iconfont"; /* Project id 2863961 */
     src: url("//at.alicdn.com/t/c/font_2863961_qgnvuxx0y7.woff2?t=1659601861494")
@@ -275,7 +361,7 @@ export default {
   .icon-arrow-up:before {
     content: "\e743";
   }
-
+  //E iconfont字体
   .select-text-wrap {
     position: relative;
     .icon-arrow-up,
