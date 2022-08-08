@@ -2,7 +2,7 @@
   <div class="app">
     <div class="flex">
       <!-- 常规用法：带本地搜索 -->
-      <div class="item">
+      <!-- <div class="item">
         <h2>常规用法：带本地搜索</h2>
         <my-select
           @on-change="handleChange"
@@ -18,12 +18,11 @@
             :label="item.label"
             :disabled="item.disabled"
           ></my-option>
-          <!-- 带远程搜索 -->
-        </my-select>
+        </my-select> -->
       </div>
       <div class="item">
         <!-- 高级用法：带远程搜索 -->
-        高级用法：带远程搜索
+        <!-- 高级用法：带远程搜索
         <my-select
           v-model="currentSearchValue"
           :loading="loading"
@@ -40,19 +39,10 @@
             :value="item.value"
             :label="item.label"
           ></my-option>
-        </my-select>
+        </my-select> -->
       </div>
-      <div class="item">
-        <h2>element ui</h2>
-        <el-select v-model="currentFood" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
+      <div class="item" :style="{height:300+'px'}">
+        <my-transfer :data="transferData" @on-change="handleTransferChange" :check-data="valueList"></my-transfer>
       </div>
     </div>
   </div>
@@ -61,8 +51,9 @@
 <script>
 import MySelect from "./components/MySelect/MySelect.vue";
 import MyOption from "./components/MySelect/MyOption.vue";
+import {MyTransfer} from "./components/MyTransfer";
 export default {
-  components: { MySelect, MyOption },
+  components: { MySelect, MyOption ,MyTransfer},
   data() {
     return {
       options: [
@@ -154,6 +145,89 @@ export default {
       list: [],
       options2: [],
       currentSearchValue: "",
+      transferData:[
+        {
+          key:0,
+          label:"备选项0",
+          disabled:false
+        },
+        {
+          key:1,
+          label:"备选项1",
+          disabled:false
+        },
+        {
+          key:2,
+          label:"备选项2",
+          disabled:false
+        },
+        {
+          key:3,
+          label:"备选项3",
+          disabled:true
+        },
+        {
+          key:4,
+          label:"备选项4",
+          disabled:true
+        },
+        {
+          key:5,
+          label:"备选项5",
+          disabled:false
+        },
+        {
+          key:6,
+          label:"备选项6",
+          disabled:true
+        },
+        {
+          key:7,
+          label:"备选项7",
+          disabled:true
+        },
+        {
+          key:8,
+          label:"备选项8",
+          disabled:false
+        },
+        {
+          key:9,
+          label:"备选项9",
+          disabled:false
+        },
+        {
+          key:10,
+          label:"备选项10",
+          disabled:false
+        },
+        {
+          key:11,
+          label:"备选项11",
+          disabled:false
+        },
+        {
+          key:12,
+          label:"备选项12",
+          disabled:false
+        },
+        {
+          key:13,
+          label:"备选项13",
+          disabled:false
+        },
+        {
+          key:14,
+          label:"备选项14",
+          disabled:false
+        },
+        {
+          key:15,
+          label:"备选项15",
+          disabled:false
+        },
+      ],
+      valueList:[1,2,5,6]
     };
   },
   mounted() {
@@ -188,6 +262,10 @@ export default {
     handleTestClick() {
       this.$emit("onChange");
     },
+    // 穿梭框变化
+    handleTransferChange(list){
+      console.log(list)
+    }
   },
 };
 </script>
