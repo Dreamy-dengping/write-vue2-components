@@ -5,7 +5,11 @@
       <div class="left-check-all">
         <check-box
           @change="handleSelectAll"
-          :checked="checkedData.length == excludeDisbledListDataLength"
+          :checked="
+            checkedData.length == excludeDisbledListDataLength &&
+            checkedData.length > 0
+          "
+          :disabled="listData.every((item) => item.disabled)"
           >列表</check-box
         >
       </div>
@@ -14,6 +18,10 @@
         <span class="num-count-span">/</span>
         <span class="num-count-span">{{ excludeDisbledListDataLength }}</span>
       </div>
+    </div>
+    <!-- 可搜索 -->
+    <div class="search-input" v-if="filterable">
+      <input type="text" placeholder="请输入搜索内容" @input="handleSearch" />
     </div>
     <!-- 主体列表 -->
     <ul class="transfer-list-body" v-if="listData.length">
@@ -45,15 +53,22 @@ import CheckBox from "./CheckBox.vue";
 export default {
   components: { CheckBox },
   props: {
+    // 列表数据
     listData: {
       type: Array,
       default() {
         return [];
       },
     },
+    // 是否可搜索
+    filterable: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
+      // 选中数据
       checkedData: [],
     };
   },
@@ -91,6 +106,15 @@ export default {
     // 清空checkdata当点击移走按钮时
     clearCheckData() {
       this.checkedData = [];
+      // 告知外部选中项变化
+      this.$emit("select-change", {
+        status: this.checkedData.length > 0,
+        checkedData: this.checkedData,
+      });
+    },
+    // 执行搜索
+    handleSearch(e) {
+      this.$emit("search", e.target.value);
     },
   },
 };
@@ -122,6 +146,25 @@ export default {
     .num-count-span {
       font-size: 12px;
       color: #909399;
+    }
+  }
+  .search-input {
+    padding: 0 15px;
+    margin: 15px 0;
+    input {
+      height: 32px;
+      width: 100%;
+      font-size: 12px;
+      display: inline-block;
+      box-sizing: border-box;
+      border-radius: 16px;
+      padding-right: 10px;
+      padding-left: 30px;
+      border: 1px solid #dcdfe6;
+      &:focus {
+        outline: none;
+        border-color: #409eff;
+      }
     }
   }
   .transfer-list-body,
