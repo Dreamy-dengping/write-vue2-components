@@ -41,7 +41,7 @@
           ></my-option>
         </my-select> -->
       </div>
-      <div class="item" :style="{ height: 300 + 'px' }">
+      <!-- <div class="item" :style="{ height: 300 + 'px' }">
         <my-transfer
           :data="transferData"
           @on-change="handleTransferChange"
@@ -50,6 +50,28 @@
           @right-check-change="rightCheckChange"
           filterable
         ></my-transfer>
+      </div> -->
+      <div class="item">
+        咋的
+        <my-page
+          :total="1332"
+          :current="1"
+          :page-size="10"
+          :show-total="true"
+          :show-sizer="true"
+          @on-change="handlePageChange"
+          @on-page-size-change="handlePageSizeChange"
+          :page-size-opts="[10, 20, 30, 40]"
+        ></my-page>
+      </div>
+      <div class="item">
+        iview 组件库的
+        <Page :total="1332" />
+      </div>
+      <div class="item">
+        iview 组件库的
+        <el-pagination background layout="prev, pager, next" :total="1200">
+        </el-pagination>
       </div>
     </div>
   </div>
@@ -58,9 +80,10 @@
 <script>
 import MySelect from "./components/MySelect/MySelect.vue";
 import MyOption from "./components/MySelect/MyOption.vue";
+import MyPage from "./components/MyPage/MyPage.vue";
 import { MyTransfer } from "./components/MyTransfer";
 export default {
-  components: { MySelect, MyOption, MyTransfer },
+  components: { MySelect, MyOption, MyTransfer, MyPage },
   data() {
     return {
       options: [
@@ -280,6 +303,14 @@ export default {
     // 右边选中变化
     rightCheckChange(checkData) {
       console.log("right", checkData);
+    },
+    // 页码变更
+    handlePageChange(page) {
+      console.log("当前页码：" + page);
+    },
+    // 每页条数变化
+    handlePageSizeChange(pageSize) {
+      console.log("每页条数：" + pageSize);
     },
   },
 };
