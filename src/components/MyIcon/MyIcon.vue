@@ -1,5 +1,5 @@
 <template>
-  <i :class="selftClasses" :style="style"> </i>
+  <i :class="selftClasses" :style="style" @click="$emit('click', $event)"> </i>
 </template>
 
 <script>
