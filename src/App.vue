@@ -20,6 +20,7 @@
           ></my-option>
         </my-select>
       </div> -->
+      <!-- 下拉组件 -->
       <div class="item">
         <!-- 高级用法：带远程搜索 -->
         <!-- 高级用法：带远程搜索
@@ -41,6 +42,7 @@
           ></my-option>
         </my-select> -->
       </div>
+      <!-- 穿梭框组件 -->
       <!-- <div class="item" :style="{ height: 300 + 'px' }">
         <my-transfer
           :data="transferData"
@@ -51,6 +53,7 @@
           filterable
         ></my-transfer>
       </div> -->
+      <!-- 分页组件 -->
       <div class="item">
         <!-- <my-page
           :total="1332"
@@ -72,12 +75,51 @@
         <el-pagination background layout="prev, pager, next" :total="1200">
         </el-pagination>
       </div> -->
+      <!-- Icon组件 -->
       <div class="item">
-        <my-icon type="icon-cb-putongyonghu" color="red" :size="30"></my-icon>
+        <!-- <my-icon type="icon-cb-putongyonghu" color="red" :size="30"></my-icon>
         <my-icon type="icon-fenlei" color="blue" :size="40"></my-icon>
         <my-icon type="icon-zaixian" color="green" :size="50"></my-icon>
-        <my-icon type="icon-guanliyuan" :size="60"></my-icon>
+        <my-icon type="icon-guanliyuan" :size="60"></my-icon> -->
       </div>
+      <!-- Dropdown组件 -->
+      <div class="item">
+        <my-dropdown
+          @on-click="handleItemClick"
+          trigger="click"
+          placement="bottom"
+        >
+          <a href="javascript:void(0)"> 下拉菜单 </a>
+          <my-dropdown-menu slot="list">
+            <my-dropdown-item
+              v-for="item in drowdownList"
+              :divided="item.isDivided"
+              :disabled="item.isDisabled"
+              :name="item.label"
+              >{{ item.label }}</my-dropdown-item
+            >
+          </my-dropdown-menu>
+        </my-dropdown>
+      </div>
+      <!-- <div class="item">
+        <Dropdown
+          trigger="click"
+          placement="top-start"
+          style="margin-left: 20px"
+        >
+          <a href="javascript:void(0)">
+            click 触发
+            <Icon type="ios-arrow-down"></Icon>
+          </a>
+          <DropdownMenu slot="list">
+            <DropdownItem>驴打滚</DropdownItem>
+            <DropdownItem>炸酱面</DropdownItem>
+            <DropdownItem>豆汁儿</DropdownItem>
+            <DropdownItem>冰糖葫芦</DropdownItem>
+            <DropdownItem>北京烤鸭</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </div> -->
     </div>
   </div>
 </template>
@@ -88,8 +130,17 @@ import MyOption from "./components/MySelect/MyOption.vue";
 import MyPage from "./components/MyPage/MyPage.vue";
 import { MyTransfer } from "./components/MyTransfer";
 import { MyIcon } from "@/components/MyIcon";
+import { MyDropdown, MyDropdownItem } from "@/components/MyDropdown";
 export default {
-  components: { MySelect, MyOption, MyTransfer, MyPage, MyIcon },
+  components: {
+    MySelect,
+    MyOption,
+    MyTransfer,
+    MyPage,
+    MyIcon,
+    MyDropdownItem,
+    MyDropdown,
+  },
   data() {
     return {
       options: [
@@ -264,6 +315,30 @@ export default {
         },
       ],
       valueList: [1, 2, 5, 6],
+      drowdownList: [
+        {
+          label: "驴打滚",
+          id: 1,
+        },
+        {
+          label: "炸酱面",
+          id: 2,
+        },
+        {
+          label: "豆汁儿",
+          id: 3,
+          isDivided: true,
+        },
+        {
+          label: "北京烤鸭",
+          id: 4,
+        },
+        {
+          label: "冰糖葫芦",
+          id: 5,
+          isDisabled: true,
+        },
+      ],
     };
   },
   mounted() {
@@ -271,12 +346,6 @@ export default {
     this.list = this.states.map((item) => {
       return { value: `value:${item}`, label: `label:${item}` };
     });
-    this.$on("onChange", () => {
-      console.log("测试出发了");
-    });
-    window.onkeyup = function (e) {
-      console.log(e);
-    };
   },
   methods: {
     // 下拉变化
@@ -321,6 +390,10 @@ export default {
     handlePageSizeChange(pageSize) {
       console.log("每页条数：" + pageSize);
     },
+    // item项点击
+    handleItemClick(name) {
+      console.log("item点击name值为:" + name);
+    },
   },
 };
 </script>
@@ -330,6 +403,7 @@ export default {
   padding: 20px;
   .flex {
     display: flex;
+    margin-top: 500px;
     .item {
       margin: 0 20px;
     }
