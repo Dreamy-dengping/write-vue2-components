@@ -52,8 +52,7 @@
         ></my-transfer>
       </div> -->
       <div class="item">
-        咋的
-        <my-page
+        <!-- <my-page
           :total="1332"
           :current="1"
           :page-size="10"
@@ -62,9 +61,9 @@
           @on-change="handlePageChange"
           @on-page-size-change="handlePageSizeChange"
           :page-size-opts="[10, 20, 30, 40]"
-        ></my-page>
+        ></my-page> -->
       </div>
-      <div class="item">
+      <!-- <div class="item">
         iview 组件库的
         <Page :total="1332" />
       </div>
@@ -72,6 +71,12 @@
         iview 组件库的
         <el-pagination background layout="prev, pager, next" :total="1200">
         </el-pagination>
+      </div> -->
+      <div class="item">
+        <my-icon type="icon-cb-putongyonghu" color="red" :size="30"></my-icon>
+        <my-icon type="icon-fenlei" color="blue" :size="40"></my-icon>
+        <my-icon type="icon-zaixian" color="green" :size="50"></my-icon>
+        <my-icon type="icon-guanliyuan" :size="60"></my-icon>
       </div>
     </div>
   </div>
@@ -82,8 +87,9 @@ import MySelect from "./components/MySelect/MySelect.vue";
 import MyOption from "./components/MySelect/MyOption.vue";
 import MyPage from "./components/MyPage/MyPage.vue";
 import { MyTransfer } from "./components/MyTransfer";
+import { MyIcon } from "@/components/MyIcon";
 export default {
-  components: { MySelect, MyOption, MyTransfer, MyPage },
+  components: { MySelect, MyOption, MyTransfer, MyPage, MyIcon },
   data() {
     return {
       options: [
@@ -268,6 +274,9 @@ export default {
     this.$on("onChange", () => {
       console.log("测试出发了");
     });
+    window.onkeyup = function (e) {
+      console.log(e);
+    };
   },
   methods: {
     // 下拉变化

@@ -1,5 +1,7 @@
 <template>
   <div class="my-page">
+    <!-- 总条数 -->
+    <span class="my-page-total" v-if="showTotal">共{{ total }}条</span>
     <ul class="page-list">
       <!-- 上一页 -->
       <li
@@ -21,7 +23,7 @@
           @mouseleave="prevStatus = true"
         >
           <i v-if="prevStatus"> ...</i>
-          <i v-else><<<</i>
+          <i v-else><<</i>
         </li>
         <!-- 正常页码 -->
         <li
@@ -34,7 +36,7 @@
           @mouseleave="nextStatus = true"
         >
           <i v-if="nextStatus"> ...</i>
-          <i v-else>>>></i>
+          <i v-else>>></i>
         </li>
         <!-- 向后五页 -->
         <li
@@ -58,91 +60,123 @@
         &gt;
       </li>
     </ul>
+    <!-- 每页条数电梯 -->
+    <div class="page-size-select" v-if="showSizer">
+      <select @change="handlePageSizeChange">
+        <option
+          :value="pageSizeItem"
+          v-for="pageSizeItem in pageSizeOpts"
+          :key="pageSizeItem"
+        >
+          {{ pageSizeItem }}条/页
+        </option>
+      </select>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   props: {
+    // 总页码条数
     total: {
       type: Number,
       default: 0,
     },
+    // 当前页
     current: {
       type: Number,
       default: 1,
     },
+    // 每页条数，默认10条
     pageSize: {
       type: Number,
       default: 10,
     },
+    // 是否显示总条数
     showTotal: {
       type: Boolean,
       default: false,
     },
+    // 每页大小
     showSizer: {
       type: Boolean,
       default: false,
     },
+    // 页码条数下拉
+    pageSizeOpts: {
+      type: Array,
+      default() {
+        return [10, 20, 30, 40];
+      },
+    },
   },
   data() {
     return {
+      // 当前页码
       currentPage: this.current || 1,
+      // 当前每页条数
+      currentPageSize: this.pageSize,
+      // 是否显示向后5条的>>
       prevStatus: true,
+      // 是否显示向前5条的<<
       nextStatus: true,
     };
   },
   computed: {
     // 根据总条数和每页条数计算得出总页数,记得向上取整
     totalPage() {
-      return Math.ceil(this.total / this.pageSize);
+      return Math.ceil(this.total / this.currentPageSize);
     },
     // 动态根据当前页,重新组装分页列表数据
     pageList() {
-      if (this.totalPage - this.currentPage > 3) {
-        if (this.currentPage > 3) {
-          return [
-            1,
-            "prev",
-            this.currentPage - 2,
-            this.currentPage - 1,
-            this.currentPage,
-            this.currentPage + 1,
-            this.currentPage + 2,
-            "next",
-            this.totalPage,
-          ];
-        } else {
-          if (this.totalPage > 8) {
-            return [1, 2, 3, "next", this.totalPage];
-          } else {
-            return this.totalPage;
-          }
-        }
-      } else {
-        if (this.currentPage < 3) {
-          return new Array(totalPage).fill(0).map((item, index) => index);
-        } else {
-          return [
-            1,
-            "prev",
-            this.totalPage - 2,
-            this.totalPage - 1,
-            this.totalPage,
-          ];
-        }
+      //情况1： 总页码数<5的直接返回
+      if (this.totalPage <= 5) {
+        return this.totalPage;
       }
+      //情况2： 总页码数>5页，当时当前页码数<=3
+      if (this.currentPage <= 3) {
+        return [1, 2, 3, "next", this.totalPage];
+      }
+      // 情况3：总页数-当前页数<=3
+      if (this.currentPage > 3 && this.totalPage - this.currentPage <= 2) {
+        return [
+          1,
+          "prev",
+          this.totalPage - 2,
+          this.totalPage - 1,
+          this.totalPage,
+        ];
+      }
+      // 情况4：排除其他的，剩下的就是有向前和向后的操作点
+      return [
+        1,
+        "prev",
+        this.currentPage - 2,
+        this.currentPage - 1,
+        this.currentPage,
+        this.currentPage + 1,
+        this.currentPage + 2,
+        "next",
+        this.totalPage,
+      ];
     },
   },
   methods: {
+    // 页码项点击
     handlePageItemClick(item, type) {
+      // 重置向上和向下翻五页
+      this.prevStatus = true;
+      this.nextStatus = true;
       switch (type) {
+        // 向前5页
         case "prev":
           this.currentPage -= 5;
           if (this.currentPage < 1) {
             this.currentPage = 1;
           }
           break;
+        // 向后5页
         case "next":
           this.currentPage += 5;
           if (this.currentPage > this.totalPage) {
@@ -150,13 +184,16 @@ export default {
           }
           break;
         default:
+          // 默认常规页码点击
           if (this.currentPage == item) {
             return;
           }
           this.currentPage = item;
       }
+      // 发布页码变更事件
       this.$emit("on-change", this.currentPage);
     },
+    // 上一页和下一页点击
     handleBeforOrAfterClick(type) {
       switch (type) {
         case "before":
@@ -174,7 +211,16 @@ export default {
           }
           break;
       }
+      // 发布页码变更事件
       this.$emit("on-change", this.currentPage);
+    },
+    // 每页条数大小变化
+    handlePageSizeChange(e) {
+      // value是字符串，记得转成数字
+      this.currentPageSize = Number(e.target.value);
+      // 重置当前页码
+      this.$emit("on-page-size-change", this.currentPageSize);
+      this.currentPage = 1;
     },
   },
 };
@@ -182,6 +228,8 @@ export default {
 
 <style lang="less">
 .my-page {
+  display: flex;
+  align-items: center;
   .page-list {
     .page-list-item {
       display: inline-block;
@@ -202,6 +250,7 @@ export default {
       border-radius: 4px;
       transition: all 0.2s ease-in-out;
       margin-right: 6px;
+      margin-left: 6px;
       &:hover {
         border-color: #2d8cf0;
         color: #2d8cf0;
@@ -209,7 +258,8 @@ export default {
     }
     .active.page-list-item {
       border-color: #2d8cf0;
-      color: #2d8cf0;
+      color: #fff;
+      background-color: #2d8cf0;
     }
     .disbled.page-list-item {
       cursor: not-allowed;

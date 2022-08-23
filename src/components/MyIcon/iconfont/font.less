@@ -1,0 +1,32 @@
+@import "variables.less";
+@import "icons.less";
+
+// 定义字体
+@font-face {
+  font-family: @font-family; /* Project id 3582697 */
+  src: url("@{font-path}/iconfont.woff2?t=1660701700431") format("woff2"),
+    url("@{font-path}/iconfont.woff?t=1660701700431") format("woff"),
+    url("@{font-path}/iconfont.ttf?t=1660701700431") format("truetype");
+}
+
+// 定义字体函数
+.my-icon() {
+  display: inline-block;
+  font-family: @font-family;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-rendering: optimizeLegibility;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: -0.125em;
+  text-align: center;
+}
+
+// 调用字体函数给当前类加上类名
+.my-icon {
+  .my-icon();
+}
