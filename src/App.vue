@@ -1,110 +1,57 @@
 <template>
   <div class="app">
-    <transition :name="transitionName">
-      <router-view></router-view>
-    </transition>
-    <!-- <transition name="slide-r">
-      <router-view></router-view>
-    </transition> -->
+    <div class="box">其他页面元素</div>
+    <Affix :offset-top="100" @on-change="onChange">
+      <div class="menu">
+        <h2>系统菜单</h2>
+        <ul>
+          <li>图书管理</li>
+          <li>用户管理</li>
+          <li>机构管理</li>
+          <li>订单管理</li>
+          <li>日志管理</li>
+          <li>统计管理</li>
+          <li>销售管理</li>
+        </ul>
+      </div>
+    </Affix>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-
+import Affix from "./components/Affix/index";
 export default {
-  computed: {
-    ...mapState(["transitionName"]),
+  components: {
+    Affix,
+  },
+
+  methods: {
+    onChange(status) {
+      console.log(status);
+    },
   },
 };
 </script>
 
 <style lang="less">
-html,
-#app,
-body,
-.page,
 .app {
-  // height: 100%;
-  // width: 100%;
+  height: 2000px;
+}
+.box {
+  width: 500px;
+  height: 500px;
+  background-color: pink;
+}
+.menu {
+  background-color: #000;
   color: #fff;
-}
-.app {
-  position: relative;
-}
-.page {
+  width: 130px;
   text-align: center;
-  width: 100vw;
-  button {
-    color: #fff;
-    width: 200px;
-    height: 50px;
-    margin-top: 300px;
+  line-height: 40px;
+  ul {
+    list-style: none;
+    padding: 0 20px;
+   
   }
 }
-.slide-l-enter-active,
-.slide-l-leave-active,
-.slide-r-enter-active,
-.slide-r-leave-active {
-  transition: all 5s;
-  height: 100%;
-  width: 100%;
-  left: 0;
-  top: 0;
-}
-.slide-l-enter-from {
-  opacity: 0;
-  transform: translateX(100%);
-}
-.slide-l-enter-to,
-.slide-l-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
-.slide-l-leave-to {
-  opacity: 0;
-  transform: translateX(-100%);
-}
-//
-.slide-r-enter-from {
-  opacity: 0;
-  transform: translateX(-100%);
-}
-.slide-r-enter-to,
-.slide-r-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
-.slide-r-leave-to {
-  opacity: 0;
-  transform: translateX(100%);
-}
-
-//
-
-// .slide-r-enter-active,
-// .slide-r-leave-active,
-// .slide-l-enter-active,
-// .slide-l-leave-active {
-//   transition: all .3s;
-//   position: absolute;
-//   height: 100%;
-//   width: 100%;
-// }
-// .slide-l-enter {
-//   opacity: 0;
-//   transform: translateX(100%);
-// }
-// .slide-l-leave-active {
-//   opacity: 0;
-//   transform: translateX(-100%);
-// }
-// .slide-r-enter {
-//   opacity: 0;
-//   transform: translateX(-100%);
-// }
-// .slide-r-leave-active {
-//   opacity: 0;
-//   transform: translateX(100%);
-// }
 </style>
