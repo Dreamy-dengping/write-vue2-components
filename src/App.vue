@@ -1,7 +1,12 @@
 <template>
   <div class="app">
     <Form :mode="formValue" :rule="ruleCustom" :label-width="100" ref="form">
-      <form-item label="姓名：" prop="name" :label-width="100">
+      <form-item
+        label="姓名："
+        prop="name"
+        :label-width="100"
+        label-position="right"
+      >
         <Input type="text" v-model="formValue.name" placeholder="请输入姓名" />
       </form-item>
       <form-item
@@ -20,8 +25,8 @@
         />
       </form-item>
       <form-item>
-        <button @click="handleSubmit('form')">提交</button>
-        <button @click="handleCancel('form')">清除</button>
+        <button class="btn primary" @click="handleSubmit('form')">提交</button>
+        <button class="btn" @click="handleCancel('form')">清除</button>
       </form-item>
     </Form>
   </div>
@@ -103,9 +108,28 @@ input {
   border: 1px solid #000;
   width: 100%;
 }
-button {
-  border: 1px solid #000;
-  background-color: antiquewhite;
+.btn {
+  display: inline-block;
+  margin-bottom: 0;
+  margin-right: 20px;
+  font-weight: 400;
+  text-align: center;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  user-select: none;
+  height: 32px;
+  padding: 0 15px;
+  font-size: 14px;
+  border-radius: 4px;
+  color: #515a6e;
+  background-color: #fff;
+  border-color: #dcdee2;
+}
+.primary {
+  background-color: #008c8c;
+  color: #fff;
 }
 .app {
   width: 500px;

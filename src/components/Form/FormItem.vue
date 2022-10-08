@@ -6,7 +6,7 @@
       :style="computedStyle"
       ref="formItemLabel"
     >
-      {{ label }}
+      <span>{{ label }}</span>
     </div>
     <div class="form-item-content" :style="formItemContent">
       <slot></slot>
@@ -58,11 +58,15 @@ export default {
       rule: {},
       required: false,
       errorMessage: "",
+      labelHeight: 0,
     };
   },
   computed: {
     computedStyle() {
-      return { width: this.labelWidth ? this.labelWidth + "px" : "" };
+      return {
+        width: this.labelWidth ? this.labelWidth + "px" : "",
+        height: this.labelHeight + "px",
+      };
     },
     formItemLabelClass() {
       return ["form-item-label", this.required ? "form-item-required" : ""];
@@ -70,9 +74,10 @@ export default {
     formItemClass() {
       return [
         "form-item",
-        "form-item-" + this.labelPosition ? this.labelPosition : "default",
+        "form-item-" + (this.labelPosition ? this.labelPosition : "-default"),
       ];
     },
+    //
     formItemContent() {
       return {
         marginLeft: this.formCotentLeft + "px",
@@ -90,6 +95,7 @@ export default {
         this.formCotentLeft = this.$refs.formItemLabel
           ? this.$refs.formItemLabel.scrollWidth
           : 0;
+        this.labelHeight = this.$refs.formItemLabel.parentNode.scrollHeight;
       });
       //将父组件保留到当前组件中
       this.mode = this.formInstance.mode;
@@ -111,7 +117,7 @@ export default {
         }
       }
     },
-    // 验证表单
+    // 验证表单(供form组件和自己内部调用)
     async validate(type) {
       return new Promise(async (resolve, reject) => {
         let formItemValidate = [];
@@ -177,7 +183,10 @@ export default {
     line-height: 1;
     vertical-align: middle;
     position: relative;
+    display: flex;
+    align-items: center;
   }
+
   .form-item-error-content {
     position: relative;
     .err-tip {
@@ -186,6 +195,21 @@ export default {
       top: 0;
       color: red;
     }
+  }
+}
+.form-item-right {
+  .form-item-label {
+    justify-content: right;
+  }
+}
+.form-item-left {
+  .form-item-label {
+    justify-content: left;
+  }
+}
+.form-item-center {
+  .form-item-label {
+    justify-content: center;
   }
 }
 .form-item-required:before {
