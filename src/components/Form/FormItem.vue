@@ -11,7 +11,11 @@
     <div class="form-item-content" :style="formItemContent">
       <slot></slot>
       <div class="form-item-error-content">
-        <div class="err-tip" v-if="required">必填项</div>
+        <transition name="fade-content">
+          <div class="err-tip" v-if="errorMessage.length">
+            {{ errorMessage }}
+          </div>
+        </transition>
       </div>
     </div>
   </div>
@@ -21,18 +25,27 @@
 import Schema from "async-validator";
 export default {
   inject: ["formInstance"],
+  provide() {
+    return {
+      formItemInstance: this,
+    };
+  },
   props: {
+    // 表单标签
     label: {
       type: String,
       default: "",
     },
+    // 标签宽度
     labelWidth: {
       type: Number,
     },
+    // 标签位置
     labelPosition: {
       type: String,
       default: "",
     },
+    // 验证表单
     prop: {
       type: String,
       default: "",
@@ -44,6 +57,7 @@ export default {
       mode: {},
       rule: {},
       required: false,
+      errorMessage: "",
     };
   },
   computed: {
@@ -83,9 +97,10 @@ export default {
       // 判断当前项是否是必填项
       this.checkIsRequired();
     },
+    // 检测是否是必填项，必填项加*号
     checkIsRequired() {
       if (this.prop) {
-        let curFomItem = this.rule[this.prop];
+        let curFomItem = this.rule[this.prop] || [];
         if (curFomItem) {
           for (let i = 0; i < curFomItem.length; i++) {
             if (curFomItem[i].required) {
@@ -96,12 +111,54 @@ export default {
         }
       }
     },
-    validate() {},
-  },
-  watch: {
-    mode: {
-      deep: true,
-      handler() {},
+    // 验证表单
+    async validate(type) {
+      return new Promise(async (resolve, reject) => {
+        let formItemValidate = [];
+        let formItemRule = this.rule[this.prop] || [];
+        if (type) {
+          formItemValidate = formItemRule.filter(
+            (item) => item.trigger == type
+          );
+        } else {
+          formItemValidate = formItemRule;
+        }
+        // 单个表单验证
+        let formItemValidateLen = formItemValidate.length;
+        if (formItemValidateLen > 0) {
+          // 进行表单验证
+          let validateCount = 0;
+          for (let i = 0; i < formItemValidateLen; i++) {
+            const validator = new Schema({
+              [this.prop]: formItemValidate[i],
+            });
+            try {
+              // 验证成功
+              await validator.validate({
+                [this.prop]: this.$parent.mode[this.prop],
+              });
+              this.errorMessage = "";
+              validateCount++;
+            } catch ({ errors, fields }) {
+              // 验证失败
+              this.errorMessage = errors[0].message;
+              break;
+            }
+          }
+          // 说明所有表单项的验证规则校验正确
+          if (validateCount == formItemValidateLen) {
+            resolve();
+          } else {
+            reject();
+          }
+        } else {
+          resolve();
+        }
+      });
+    },
+    // 清空表单项
+    resetFields() {
+      this.errorMessage = "";
     },
   },
 };
@@ -144,5 +201,13 @@ export default {
   .form-item-label {
     text-align: right;
   }
+}
+.fade-content-enter-active,
+.fade-content-leave-active {
+  transition: opacity 0.25s;
+}
+.fade-content-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

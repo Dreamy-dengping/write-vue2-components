@@ -2,88 +2,84 @@
   <div class="app">
     <Form :mode="formValue" :rule="ruleCustom" :label-width="100" ref="form">
       <form-item label="姓名：" prop="name" :label-width="100">
-        <input type="text" v-model="formValue.name" placeholder="请输入姓名" />
+        <Input type="text" v-model="formValue.name" placeholder="请输入姓名" />
       </form-item>
       <form-item
         label="年龄："
         prop="age"
-        :rules="ruleCustom"
         :label-width="100"
         label-position="right"
       >
-        <input type="text" v-model="formValue.age" placeholder="请输入年龄" />
+        <Input type="text" v-model="formValue.age" placeholder="请输入年龄" />
+      </form-item>
+      <form-item label="家庭住址：" :label-width="100" label-position="right">
+        <Input
+          type="text"
+          v-model="formValue.address"
+          placeholder="请输入家庭住址"
+        />
       </form-item>
       <form-item>
-        <button>提交</button>
-        <button>清除</button>
+        <button @click="handleSubmit('form')">提交</button>
+        <button @click="handleCancel('form')">清除</button>
       </form-item>
     </Form>
   </div>
 </template>
 
 <script>
-import Schema from "async-validator";
 import { Form, FormItem } from "./components/Form/index";
+import Input from "./components/Input";
 export default {
-  components: { Form, FormItem },
-
+  components: { Form, FormItem, Input },
   data() {
     return {
       formValue: {
-        name: "小雅",
+        name: "小明",
         age: 12,
       },
       ruleCustom: {
         name: [
           {
             required: true,
-            message: "The name cannot be empty",
             trigger: "blur",
+            validator: (rule, value, callback) => {
+              if (!value.length) {
+                callback(new Error("必填项!"));
+              }
+              if (value.length < 5) {
+                callback(new Error("姓名最少5个字符!"));
+              }
+              if (!/[a-zA-Z]/.test(value)) {
+                callback(new Error("姓名包含英文字母!"));
+              }
+              callback();
+            },
           },
         ],
         age: [
           {
-            message: "Mailbox cannot be empty",
-            trigger: "blur",
+            trigger: "change",
+            required: true,
+            validator: (rule, value, callback) => {
+              if (!value.length) {
+                callback(new Error("必填项!"));
+              }
+              if (value * 1 < 15) {
+                callback(new Error("太年轻!"));
+              }
+              if (!Number.isInteger(value * 1)) {
+                callback(new Error("姓名必须是数字!"));
+              }
+              if (value * 1 > 100) {
+                callback(new Error("年龄最多100!"));
+              }
+              callback();
+            },
           },
         ],
       },
-      labelPosition: {
-        type: String,
-        default: "right",
-      },
     };
-  },
-  mounted() {
-    const descriptor = {
-      name: {
-        type: "string",
-        required: true,
-        validator: (rule, value) => value === "muji",
-      },
-      age: {
-        type: "number",
-        asyncValidator: (rule, value) => {
-          return new Promise((resolve, reject) => {
-            if (value < 18) {
-              reject("too young"); // reject with error message
-            } else {
-              resolve();
-            }
-          });
-        },
-      },
-    };
-    const validator = new Schema(descriptor);
-
-    validator
-      .validate({ name: "muji", age: 20 })
-      .then(() => {
-        console.log("成功");
-      })
-      .catch(({ errors, fields }) => {
-        console.log(errors, fields);
-      });
   },
   methods: {
     handleSubmit(name) {
@@ -95,7 +91,7 @@ export default {
         }
       });
     },
-    handleReset(name) {
+    handleCancel(name) {
       this.$refs[name].resetFields();
     },
   },
