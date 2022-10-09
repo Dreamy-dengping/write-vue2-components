@@ -42,6 +42,7 @@ export default {
       formValue: {
         name: "小明",
         age: 12,
+        address: "四川省成都市",
       },
       ruleCustom: {
         name: [
@@ -90,9 +91,9 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success("Success!");
+          this.$Message.success("成功");
         } else {
-          this.$Message.error("Fail!");
+          this.$Message.error("失败");
         }
       });
     },
@@ -135,20 +136,5 @@ input {
   width: 500px;
   margin: 20px auto;
 }
-.box {
-  width: 500px;
-  height: 500px;
-  background-color: pink;
-}
-.menu {
-  background-color: #000;
-  color: #fff;
-  width: 130px;
-  text-align: center;
-  line-height: 40px;
-  ul {
-    list-style: none;
-    padding: 0 20px;
-  }
-}
+
 </style>

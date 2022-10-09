@@ -3,7 +3,7 @@
     <div
       :class="formItemLabelClass"
       v-if="label"
-      :style="computedStyle"
+      :style="computedLabeItemlStyle"
       ref="formItemLabel"
     >
       <span>{{ label }}</span>
@@ -22,11 +22,14 @@
 </template>
 
 <script>
+// 导入async-validator表单验证插件
 import Schema from "async-validator";
 export default {
+  // 接收form组件实例
   inject: ["formInstance"],
   provide() {
     return {
+      // 将当前组件实例注入到下级子组件中，方便自定义封装的input checkbox datePicker等表单组件可以进行表单验证
       formItemInstance: this,
     };
   },
@@ -45,7 +48,7 @@ export default {
       type: String,
       default: "",
     },
-    // 验证表单
+    // 验证表单项字段
     prop: {
       type: String,
       default: "",
@@ -53,34 +56,43 @@ export default {
   },
   data() {
     return {
-      formCotentLeft: this.labelWidth || 0,
+      // label的宽度（取值当前组件实例提供的labelWidth优先级高于form组件全局设置的labelWidth
+      formCotentLeft: this.labelWidth || this.formInstance.labelWidth || 0,
+      // 父组件传递过来的表单绑定值对象
       mode: {},
+      // 父组件传递过来的rule规则对象
       rule: {},
+      // 是否是必填项
       required: false,
+      // 错误信息
       errorMessage: "",
+      // label的高度
       labelHeight: 0,
     };
   },
   computed: {
-    computedStyle() {
+    // label样式
+    computedLabeItemlStyle() {
       return {
         width: this.labelWidth ? this.labelWidth + "px" : "",
         height: this.labelHeight + "px",
       };
     },
+    // label类名
     formItemLabelClass() {
       return ["form-item-label", this.required ? "form-item-required" : ""];
     },
+    // form表单项类名
     formItemClass() {
       return [
         "form-item",
         "form-item-" + (this.labelPosition ? this.labelPosition : "-default"),
       ];
     },
-    //
+    //表单项内容区样式（包含表单组件和错误校验）
     formItemContent() {
       return {
-        marginLeft: this.formCotentLeft + "px",
+        marginLeft: (this.formCotentLeft || 100) + "px",
         textAlign: this.labelPosition,
       };
     },
@@ -97,7 +109,7 @@ export default {
           : 0;
         this.labelHeight = this.$refs.formItemLabel.parentNode.scrollHeight;
       });
-      //将父组件保留到当前组件中
+      //将父组件规则保留到当前组件中
       this.mode = this.formInstance.mode;
       this.rule = this.formInstance.rule;
       // 判断当前项是否是必填项
@@ -162,7 +174,7 @@ export default {
         }
       });
     },
-    // 清空表单项
+    // 清空表单项(只需要将错误信息清空就行)
     resetFields() {
       this.errorMessage = "";
     },
@@ -231,7 +243,7 @@ export default {
   transition: opacity 0.25s;
 }
 .fade-content-enter,
-.fade-leave-to {
+.fade-content-leave-to {
   opacity: 0;
 }
 </style>
