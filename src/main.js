@@ -1,6 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 import "tailwindcss/tailwind.css";
+import "./assets/css/common.less";
 Vue.config.productionTip = false;
 import myUi from "./components/index";
 import vInfiniteScroll from "./components/v-infinite-scroll";

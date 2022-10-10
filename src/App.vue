@@ -1,110 +1,44 @@
 <template>
   <div class="app">
-    <Form :mode="formValue" :rule="ruleCustom" :label-width="100" ref="form">
-      <form-item
-        label="姓名："
-        prop="name"
-        :label-width="100"
-        label-position="right"
-      >
-        <Input type="text" v-model="formValue.name" placeholder="请输入姓名" />
-      </form-item>
-      <form-item
-        label="年龄："
-        prop="age"
-        :label-width="100"
-        label-position="right"
-      >
-        <Input type="text" v-model="formValue.age" placeholder="请输入年龄" />
-      </form-item>
-      <form-item label="家庭住址：" :label-width="100" label-position="right">
-        <Input
-          type="text"
-          v-model="formValue.address"
-          placeholder="请输入家庭住址"
-        />
-      </form-item>
-      <form-item>
-        <button class="btn primary" @click="handleSubmit('form')">提交</button>
-        <button class="btn" @click="handleCancel('form')">清除</button>
-      </form-item>
-    </Form>
+    <div class="row">
+      <Row :gutter="100" align="bottom" justify="end">
+        <Col span="6" order="4"><div class="content one">1</div></Col>
+        <Col span="6" order="3"><div class="content two">2</div></Col>
+        <Col span="6" order="6"><div class="content three">3</div></Col>
+      </Row>
+    </div>
+    <div class="row">
+      <Row>
+        <Col :xs="24" :sm="4" :md="2" :lg="8" :xxl="24"
+          ><div class="content one">1</div></Col
+        >
+        <Col :xs="24" :sm="16" :md="12" :lg="8" :xxl="24"
+          ><div class="content two">2</div></Col
+        >
+        <Col :xs="24" :sm="4" :md="6" :lg="8" :xxl="24"
+          ><div class="content three">3</div></Col
+        >
+      </Row>
+    </div>
   </div>
 </template>
 
 <script>
-import { Form, FormItem } from "./components/Form/index";
-import Input from "./components/Input";
+import { Row, Col } from "./components/Row/index.js";
 export default {
-  components: { Form, FormItem, Input },
+  components: { Row, Col },
   data() {
-    return {
-      formValue: {
-        name: "小明",
-        age: 12,
-        address: "四川省成都市",
-      },
-      ruleCustom: {
-        name: [
-          {
-            required: true,
-            trigger: "blur",
-            validator: (rule, value, callback) => {
-              if (!value.length) {
-                callback(new Error("必填项!"));
-              }
-              if (value.length < 5) {
-                callback(new Error("姓名最少5个字符!"));
-              }
-              if (!/[a-zA-Z]/.test(value)) {
-                callback(new Error("姓名包含英文字母!"));
-              }
-              callback();
-            },
-          },
-        ],
-        age: [
-          {
-            trigger: "change",
-            required: true,
-            validator: (rule, value, callback) => {
-              if (!value.length) {
-                callback(new Error("必填项!"));
-              }
-              if (value * 1 < 15) {
-                callback(new Error("太年轻!"));
-              }
-              if (!Number.isInteger(value * 1)) {
-                callback(new Error("姓名必须是数字!"));
-              }
-              if (value * 1 > 100) {
-                callback(new Error("年龄最多100!"));
-              }
-              callback();
-            },
-          },
-        ],
-      },
-    };
+    return {};
   },
-  methods: {
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.$Message.success("成功");
-        } else {
-          this.$Message.error("失败");
-        }
-      });
-    },
-    handleCancel(name) {
-      this.$refs[name].resetFields();
-    },
-  },
+  methods: {},
 };
 </script>
 
 <style lang="less">
+* {
+  margin: 0;
+  padding: 0;
+}
 input {
   border: 1px solid #000;
   width: 100%;
@@ -132,9 +66,27 @@ input {
   background-color: #008c8c;
   color: #fff;
 }
-.app {
-  width: 500px;
+.row {
+  width: 70%;
   margin: 20px auto;
+  border: 1px solid #000;
+  overflow: hidden;
+  height: 300px;
+  .content {
+    height: 30px;
+    line-height: 30px;
+  }
+  .one {
+    background-color: pink;
+  }
+  .two {
+    background-color: #008c8c;
+  }
+  .three {
+    background-color: greenyellow;
+  }
+  .four {
+    background-color: rgb(122, 122, 218);
+  }
 }
-
 </style>
