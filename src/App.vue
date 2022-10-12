@@ -1,36 +1,47 @@
 <template>
   <div class="app">
-    <div class="row">
-      <Row :gutter="100" align="bottom" justify="end">
-        <Col span="6" order="4"><div class="content one">1</div></Col>
-        <Col span="6" order="3"><div class="content two">2</div></Col>
-        <Col span="6" order="6"><div class="content three">3</div></Col>
-      </Row>
-    </div>
-    <div class="row">
-      <Row>
-        <Col :xs="24" :sm="4" :md="2" :lg="8" :xxl="24"
-          ><div class="content one">1</div></Col
-        >
-        <Col :xs="24" :sm="16" :md="12" :lg="8" :xxl="24"
-          ><div class="content two">2</div></Col
-        >
-        <Col :xs="24" :sm="4" :md="6" :lg="8" :xxl="24"
-          ><div class="content three">3</div></Col
-        >
-      </Row>
-    </div>
+    <Collapse v-model="activeName">
+      <Panel name="1">
+        史蒂夫·乔布斯
+        <p slot="content">
+          史蒂夫·乔布斯（Steve
+          Jobs），1955年2月24日生于美国加利福尼亚州旧金山，美国发明家、企业家、美国苹果公司联合创办人。
+        </p>
+      </Panel>
+      <Panel name="2">
+        斯蒂夫·盖瑞·沃兹尼亚克
+        <p slot="content">
+          斯蒂夫·盖瑞·沃兹尼亚克（Stephen Gary
+          Wozniak），美国电脑工程师，曾与史蒂夫·乔布斯合伙创立苹果电脑（今之苹果公司）。斯蒂夫·盖瑞·沃兹尼亚克曾就读于美国科罗拉多大学，后转学入美国著名高等学府加州大学伯克利分校（UC
+          Berkeley）并获得电机工程及计算机（EECS）本科学位（1987年）。
+        </p>
+      </Panel>
+      <Panel name="3">
+        乔纳森·伊夫
+        <p slot="content">
+          乔纳森·伊夫是一位工业设计师，现任Apple公司设计师兼资深副总裁，英国爵士。他曾参与设计了iPod，iMac，iPhone，iPad等众多苹果产品。除了乔布斯，他是对苹果那些著名的产品最有影响力的人。
+        </p>
+      </Panel>
+    </Collapse>
+
+    <button @click="handleClick">操作按钮</button>
   </div>
 </template>
 
 <script>
-import { Row, Col } from "./components/Row/index.js";
+import { Panel, Collapse } from "./components/Collapse";
 export default {
-  components: { Row, Col },
+  components: { Collapse, Panel },
   data() {
-    return {};
+    return {
+      activeName: "1",
+    };
   },
-  methods: {},
+  methods: {
+    handleClick() {
+      this.activeName = "3";
+    },
+  },
 };
 </script>
 
@@ -39,54 +50,7 @@ export default {
   margin: 0;
   padding: 0;
 }
-input {
-  border: 1px solid #000;
-  width: 100%;
-}
-.btn {
-  display: inline-block;
-  margin-bottom: 0;
-  margin-right: 20px;
-  font-weight: 400;
-  text-align: center;
-  cursor: pointer;
-  background-image: none;
-  border: 1px solid transparent;
-  white-space: nowrap;
-  user-select: none;
-  height: 32px;
-  padding: 0 15px;
-  font-size: 14px;
-  border-radius: 4px;
-  color: #515a6e;
-  background-color: #fff;
-  border-color: #dcdee2;
-}
-.primary {
-  background-color: #008c8c;
-  color: #fff;
-}
-.row {
-  width: 70%;
-  margin: 20px auto;
-  border: 1px solid #000;
-  overflow: hidden;
-  height: 300px;
-  .content {
-    height: 30px;
-    line-height: 30px;
-  }
-  .one {
-    background-color: pink;
-  }
-  .two {
-    background-color: #008c8c;
-  }
-  .three {
-    background-color: greenyellow;
-  }
-  .four {
-    background-color: rgb(122, 122, 218);
-  }
+.app {
+  padding: 20px;
 }
 </style>
