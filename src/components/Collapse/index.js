@@ -1,3 +1,4 @@
 import Collapse from "./Collapse.vue";
 import Panel from "./Panel.vue";
-export { Panel, Collapse };
+import TransitionCollapse from "./TransitionCollapse.vue";
+export { Panel, Collapse,TransitionCollapse };

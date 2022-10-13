@@ -17,6 +17,7 @@
 <script>
 import { TransitionCollapse } from "../TransitionCollapse";
 export default {
+  // 父组件实例
   inject: ["collapseInstace"],
   props: {
     // 当前面板标识
@@ -31,24 +32,13 @@ export default {
   },
   components: { TransitionCollapse },
   methods: {
+    // 点击折叠状态交给父组件处理
     handlePanelItemClick() {
-      this.$parent.setChildPanelStatus(this);
-      this.status = !this.status;
+      this.$parent.toggle(this);
     },
+    // 根据初始状态的value，设置展开项
     init() {
       if (this.name == this.collapseInstace.value) {
-        this.status = true;
-      }
-    },
-    handleCllapseStatus(value) {
-      // 说明手风琴效果
-      if (this.collapseInstace.accordion && value != this.name) {
-        this.status = false;
-      }
-      if (this.collapseInstace.accordion && value == this.name) {
-        this.status = true;
-      }
-      if (!this.collapseInstace.accordion && value == this.name) {
         this.status = true;
       }
     },
