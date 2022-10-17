@@ -1,7 +1,7 @@
 import loadingSrc from "../../assets/img/loading.jpg";
 // 判断dom元素是否到达可视区
 export const checkEnterView = (el) => {
-  const { top, left } = el.getClientRects()[0];
+  const { top, left } = el.getBoundingClientRect();
   const htmlClientHeight = document.documentElement.clientHeight;
   const htmlClientWidth = document.documentElement.clientWidth;
   if (top < htmlClientHeight && left < htmlClientWidth) {
