@@ -13,6 +13,10 @@ import "view-design/dist/styles/iview.css";
 import "@/assets/iconfont/ionicons.less";
 import router from "./router/index";
 import store from "./store/index";
+// 导入插件
+import vLazy from "./components/v-lazy";
+
+Vue.use(vLazy);
 Vue.use(ElementUI);
 Vue.use(vInfiniteScroll);
 Vue.use(ViewUI);

@@ -2,23 +2,13 @@
   <div class="app">
     <div class="aline">
       <div class="item">
-        <h2>水平拖拽</h2>
-        <div class="demo-split">
-          <Split v-model="split1">
-            <div slot="left" class="demo-split-pane">Left Pane</div>
-            <div slot="right" class="demo-split-pane">Right Pane</div>
-          </Split>
-        </div>
-      </div>
-      <div class="item">
-        <h2>垂直拖拽</h2>
-        <div class="demo-split">
-          <Split v-model="split2" mode="vertical">
-            <div slot="top" class="demo-split-pane">Top Pane</div>
-            <div slot="bottom" class="demo-split-pane">
-              Bottom Pane
-            </div>
-          </Split>
+        <div class="img-wrap">
+          <ul>
+            <li v-for="(item, index) in list" :key="index">
+              <!-- <img :src="item.src" /> -->
+              <img v-lazy="item.src" />
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -26,16 +16,47 @@
 </template>
 
 <script>
-import { Split } from "./components/Split/index";
 export default {
-  components: {
-    Split,
-  },
+  components: {},
   data() {
     return {
-      split1: 0.1,
-      split2: 0.21,
+      current: -1,
+      list: [],
+      img: "",
     };
+  },
+  mounted() {
+    this.getList();
+  },
+  methods: {
+    handleCLick() {
+      console.log(this.current++);
+    },
+    getList() {
+      let res = [
+        {
+          id: Math.random(),
+          src: require("./assets/img/01.webp"),
+        },
+        {
+          id: Math.random(),
+          src: require("./assets/img/02.webp"),
+        },
+        {
+          id: Math.random(),
+          src: require("./assets/img/03.webp"),
+        },
+        {
+          id: Math.random(),
+          src: 11,
+        },
+        {
+          id: Math.random(),
+          src: require("./assets/img/04.webp"),
+        },
+      ];
+      this.list = [...res, ...res, ...res, ...res];
+    },
   },
 };
 </script>
@@ -82,13 +103,18 @@ export default {
   margin: 20px;
 }
 .item {
-  width: 50%;
-  h2 {
-    font-weight: bold;
-    text-align: center;
+  margin: 20px auto;
+  img {
+    width: 250px;
+    height: 200px;
   }
-}
-.demo-split-pane {
-  padding: 10px;
+  ul {
+    margin: 0 auto;
+    li {
+      border: 1px solid red;
+      height: 200px;
+      width: 250px;
+    }
+  }
 }
 </style>
