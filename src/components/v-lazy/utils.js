@@ -1,13 +1,33 @@
 import loadingSrc from "../../assets/img/loading.jpg";
 // 判断dom元素是否到达可视区
-export const checkEnterView = (el) => {
-  const { top, left } = el.getBoundingClientRect();
-  const htmlClientHeight = document.documentElement.clientHeight;
-  const htmlClientWidth = document.documentElement.clientWidth;
-  if (top < htmlClientHeight && left < htmlClientWidth) {
+export const checkEnterView = (imgInstance, scrollParent) => {
+  let parentHeight, parentWidth, x, y;
+  if (imgInstance.scroll) {
+    // 存在滚动父级，需要元素到滚动父级可视区顶部的估计：计算公式为offsetTop-scrollParent.scrollTop
+    parentHeight = scrollParent.clientHeight;
+    parentWidth = scrollParent.clientWidth;
+    y = imgInstance.el.offsetTop - scrollParent.scrollTop;
+    x = imgInstance.el.offsetLeft - scrollParent.scrollLeft;
+  } else {
+    // 不存在滚动父级的情况
+    const { top, left } = imgInstance.el.getBoundingClientRect();
+    y = top;
+    x = left;
+    parentHeight = document.documentElement.clientHeight;
+    parentWidth = document.documentElement.clientWidth;
+  }
+  // console.log(el, y, parentHeight);
+  if (y < parentHeight && x < parentWidth) {
     return true;
   }
   return false;
+  // const { top, left } = el.getBoundingClientRect();
+  // const htmlClientHeight = document.documentElement.clientHeight;
+  // const htmlClientWidth = document.documentElement.clientWidth;
+  // if (top < htmlClientHeight && left < htmlClientWidth) {
+  //   return true;
+  // }
+  // return false;
 };
 
 // 初始状态将图片的路径设置成加载中的图片

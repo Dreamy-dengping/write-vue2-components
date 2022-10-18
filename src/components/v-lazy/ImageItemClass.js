@@ -24,7 +24,7 @@ export default class ImageItemClass {
         this.el.style.opacity = "0";
         // this.el.style.transition = `opacity ${this.transitionTime}s`;
         requestAnimationFrame(() => {
-          this.el.style.transition = `opacity ${1}s ease-in-out`;
+          this.el.style.transition = `opacity ${1.2}s ease-in-out`;
           this.el.style.opacity = "1";
         });
       };

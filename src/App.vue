@@ -3,15 +3,28 @@
     <div class="aline">
       <div class="item">
         <div class="img-wrap">
+          <h2>全局window滚动</h2>
           <ul>
             <li v-for="(item, index) in list" :key="index">
-              <!-- <img :src="item.src" /> -->
               <img v-lazy="item.src" />
             </li>
           </ul>
         </div>
       </div>
+      <div class="item">
+        <h2>带overflow父级内部滚动</h2>
+        <div class="img-wrap scroll-wrap">
+          <ul>
+            <li v-for="(item, index) in list" :key="index">
+              <img v-lazy.scroll="item.src" />
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
+    <!-- <button @click="$router.push('/detail')">home</button> -->
+
+    <!-- <router-view></router-view> -->
   </div>
 </template>
 
@@ -27,6 +40,7 @@ export default {
   },
   mounted() {
     this.getList();
+    this.init();
   },
   methods: {
     handleCLick() {
@@ -57,6 +71,7 @@ export default {
       ];
       this.list = [...res, ...res, ...res, ...res];
     },
+    init() {},
   },
 };
 </script>
@@ -115,6 +130,11 @@ export default {
       height: 200px;
       width: 250px;
     }
+  }
+  .scroll-wrap {
+    height: 500px;
+    overflow: auto;
+    position: relative;
   }
 }
 </style>
