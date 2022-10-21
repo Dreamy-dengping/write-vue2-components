@@ -11,6 +11,8 @@ export default class ImageItemClass {
     this.loaded = false;
     // 动画过渡时长
     this.transitionTime = transitionTime;
+    // 是否存在加载出错
+    this.loadingError = false;
   }
   //   每个图片项的加载函数
   loadImg() {
@@ -23,23 +25,27 @@ export default class ImageItemClass {
         // 为了更好的用户体验，这里将图片的透明度进行过渡
         this.el.style.opacity = "0";
         // this.el.style.transition = `opacity ${this.transitionTime}s`;
-        requestAnimationFrame(() => {
-          this.el.style.transition = `opacity ${1.2}s ease-in-out`;
-          this.el.style.opacity = "1";
-        });
+        this.addTransition();
       };
       //src为无效图片路径不能够加载出来
       this.el.onerror = () => {
         // 设置成默认加载错误时候的图片，避免破碎图片的显示
         this.el.src = this.errorImg;
+        this.loadingError = true;
         reject();
-        requestAnimationFrame(() => {
-          this.el.style.transition = `opacity ${this.transitionTime}s`;
-          this.el.style.opacity = "1";
-        });
+        this.addTransition();
       };
       // 标识当前图片已经被加载了，避免滚动重复处理造成的卡顿
       this.loaded = true;
+    });
+  }
+  // 添加过渡
+  addTransition() {
+    requestAnimationFrame(() => {
+      !this.loadingError
+        ? (this.el.style.transition = `opacity ${1.2}s ease-in-out`)
+        : null;
+      this.el.style.opacity = "1";
     });
   }
 }

@@ -76,17 +76,19 @@ export default class Lazy {
     this.scrollParentimgPoolList = [];
     this.noScrollParentimgPoolList = [];
   }
+  // 指令绑定的值变化
   update(el, binding) {
     this.updateImageInstance(el, binding);
-    this.handleScroll();
   }
   // 更新保存的图片实例对象
   updateImageInstance(el, binding) {
+    // 将更新的图片的路径进行更换，重新加载
     for (let [elment, imgInstance] of this.imgPoolList) {
       if (el == elment && !imgInstance.loaded) {
         imgInstance.src = binding.value;
       }
     }
+    this.handleScroll();
   }
   // 滚动的时候，根据dom元素是否进入到可视区动态，再决定是否加载图片
   handleScroll() {

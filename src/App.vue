@@ -8,10 +8,10 @@
             <li v-for="(item, index) in list" :key="index">
               <img v-lazy="item.src" />
             </li>
+            <li></li>
           </ul>
         </div>
       </div> -->
-
       <!-- <div class="aline">
         <div class="tool-tip">
           <button id="button" aria-describedby="tooltip">I'm a button</button>
@@ -19,28 +19,38 @@
         </div>
       </div> -->
       <div class="aline">
-        <img v-lazy="curentImage" />
-        <button @click="handleImageChange">切换</button>
+        <Tabs v-model="tabName">
+          <TabPane label="首页" name="name1">首页</TabPane>
+          <TabPane label="图书详情页" name="name2" disabled>图书详情页</TabPane>
+          <TabPane label="个人主页" name="name3">个人主页</TabPane>
+          <TabPane :label="labelRender" name="name4">购物车</TabPane>
+        </Tabs>
       </div>
+      <!-- <button @click="handleBtnClick">操作</button> -->
     </div>
   </div>
 </template>
 
 <script>
 import { createPopper } from "@popperjs/core";
+import { Tabs, TabPane } from "@/components/Tabs";
 export default {
-  components: {},
+  components: { Tabs, TabPane },
   data() {
     return {
       current: -1,
       list: [],
       curentImage: "",
+      tabName: "name1",
+      labelRender(h) {
+        return h("div", "购物车");
+      },
+      show: true,
     };
   },
   mounted() {
-    this.getList();
-    this.init();
-    this.initToolTip();
+    // this.getList();
+    // this.initToolTip();
   },
   methods: {
     handleCLick() {
@@ -71,7 +81,6 @@ export default {
       ];
       this.list = [...res, ...res, ...res, ...res];
     },
-    init() {},
     initToolTip() {
       const button = document.querySelector(".tool-tip");
       const tooltip = document.querySelector("#tooltip");
@@ -79,8 +88,8 @@ export default {
         placement: "right",
       });
     },
-    handleImageChange() {
-      this.curentImage = require("./assets/img/02.webp");
+    handleBtnClick() {
+      this.show = !this.show;
     },
   },
 };
@@ -154,5 +163,12 @@ export default {
   padding: 5px 10px;
   border-radius: 4px;
   font-size: 13px;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
