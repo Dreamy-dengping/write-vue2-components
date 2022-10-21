@@ -4,7 +4,7 @@ import ImageItemClass from "./ImageItemClass";
 export default class Lazy {
   constructor(options) {
     // 所有v-lazy绑定的图片的集合
-    this.imgPoolList = [];
+    this.imgPoolList = new Map();
     this.noScrollParentimgPoolList = []; //不带滚动父级
     this.scrollParentimgPoolList = []; //带滚动父级
     // 图片集合字段名
@@ -45,7 +45,8 @@ export default class Lazy {
       ? "scrollParentimgPoolList"
       : "noScrollParentimgPoolList";
     // 将当前dom元素加入到set集合中，便于统一处理
-    this.imgPoolList.push(
+    this.imgPoolList.set(
+      el,
       new ImageItemClass({
         src: binding.value, //图片路径
         errorImg: this.errorImg, //加载出错默认图
@@ -59,7 +60,6 @@ export default class Lazy {
     // 初始的时候，执行一次函数
     this.handleScroll();
     // 记住绑定过了就不需要绑定了，不然会出现给dom元素重复多次绑定滚动处理函数
-    // if (!this.isScroll) {
     // 如果存在滚动滚动父级，那么给滚动父级也绑定滚动处理函数
     if (this.findScrollParent(el)) {
       !this.isBindScrollScrollParent &&
@@ -70,18 +70,27 @@ export default class Lazy {
         window.addEventListener("scroll", this.debounceHandleScroll);
       this.isBindScrollWindow = true;
     }
-    // }
-    // 标记当前滚动处理函数已经绑定好了
-    // this.isScroll = true;
   }
   // 元素卸载，初始化
   unbind() {
     this.scrollParentimgPoolList = [];
     this.noScrollParentimgPoolList = [];
   }
+  update(el, binding) {
+    this.updateImageInstance(el, binding);
+    this.handleScroll();
+  }
+  // 更新保存的图片实例对象
+  updateImageInstance(el, binding) {
+    for (let [elment, imgInstance] of this.imgPoolList) {
+      if (el == elment && !imgInstance.loaded) {
+        imgInstance.src = binding.value;
+      }
+    }
+  }
   // 滚动的时候，根据dom元素是否进入到可视区动态，再决定是否加载图片
   handleScroll() {
-    for (let imgInstance of this.imgPoolList) {
+    for (let [el, imgInstance] of this.imgPoolList) {
       if (this.scrollParent) {
         // 当img出现在可视区并且没有被加载的时候，进行加载处理
         if (
@@ -106,7 +115,8 @@ export default class Lazy {
         // 图片加载成功的回调
       })
       .catch(() => {
-        // 图片加载失败的回调
+        // 图片加载失败的回调,将loaded变为false，便于图片更新后重新加载
+        imgInstance.loaded = false;
       });
   }
   // 寻找滚动父级元素，带overflow的

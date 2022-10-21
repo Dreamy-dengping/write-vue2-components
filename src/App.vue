@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <div class="aline">
-      <div class="item">
+      <!-- <div class="item">
         <div class="img-wrap">
           <h2>全局window滚动</h2>
           <ul>
@@ -10,37 +10,37 @@
             </li>
           </ul>
         </div>
-      </div>
-      <div class="item">
-        <h2>带overflow父级内部滚动</h2>
-        <div class="img-wrap scroll-wrap">
-          <ul>
-            <li v-for="(item, index) in list" :key="index">
-              <img v-lazy.scroll="item.src" />
-            </li>
-          </ul>
+      </div> -->
+
+      <!-- <div class="aline">
+        <div class="tool-tip">
+          <button id="button" aria-describedby="tooltip">I'm a button</button>
+          <div id="tooltip" role="tooltip">I'm a tooltip</div>
         </div>
+      </div> -->
+      <div class="aline">
+        <img v-lazy="curentImage" />
+        <button @click="handleImageChange">切换</button>
       </div>
     </div>
-    <!-- <button @click="$router.push('/detail')">home</button> -->
-
-    <!-- <router-view></router-view> -->
   </div>
 </template>
 
 <script>
+import { createPopper } from "@popperjs/core";
 export default {
   components: {},
   data() {
     return {
       current: -1,
       list: [],
-      img: "",
+      curentImage: "",
     };
   },
   mounted() {
     this.getList();
     this.init();
+    this.initToolTip();
   },
   methods: {
     handleCLick() {
@@ -72,6 +72,16 @@ export default {
       this.list = [...res, ...res, ...res, ...res];
     },
     init() {},
+    initToolTip() {
+      const button = document.querySelector(".tool-tip");
+      const tooltip = document.querySelector("#tooltip");
+      createPopper(button, tooltip, {
+        placement: "right",
+      });
+    },
+    handleImageChange() {
+      this.curentImage = require("./assets/img/02.webp");
+    },
   },
 };
 </script>
@@ -111,14 +121,10 @@ export default {
 }
 .aline {
   display: flex;
-}
-.demo-split {
-  height: 200px;
-  border: 1px solid #dcdee2;
-  margin: 20px;
+  justify-content: center;
 }
 .item {
-  margin: 20px auto;
+  margin: 40px;
   img {
     width: 250px;
     height: 200px;
@@ -136,5 +142,17 @@ export default {
     overflow: auto;
     position: relative;
   }
+}
+.tool-tip {
+  width: 300px;
+  height: 300px;
+  border: 1px solid red;
+}
+#tooltip {
+  background-color: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 13px;
 }
 </style>

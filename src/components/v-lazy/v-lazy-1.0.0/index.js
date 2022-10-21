@@ -6,7 +6,6 @@ export default {
     const lazyInstance = new Lazy(options);
     Vue.directive("lazy", {
       inserted: lazyInstance.inserted.bind(lazyInstance),
-      update: lazyInstance.update.bind(lazyInstance),
     });
   },
 };

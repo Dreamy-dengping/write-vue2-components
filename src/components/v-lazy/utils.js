@@ -1,5 +1,11 @@
 import loadingSrc from "../../assets/img/loading.jpg";
-// 判断dom元素是否到达可视区
+/**
+ * @Description 判断dom元素是否到达可视区
+ * @Author Galaxy
+ * @Date 2022/10/18 18:47:46
+ * @param { Boolean }
+ * @return { Boolean }
+ **/
 export const checkEnterView = (imgInstance, scrollParent) => {
   let parentHeight, parentWidth, x, y;
   if (imgInstance.scroll) {
@@ -16,18 +22,10 @@ export const checkEnterView = (imgInstance, scrollParent) => {
     parentHeight = document.documentElement.clientHeight;
     parentWidth = document.documentElement.clientWidth;
   }
-  // console.log(el, y, parentHeight);
   if (y < parentHeight && x < parentWidth) {
     return true;
   }
   return false;
-  // const { top, left } = el.getBoundingClientRect();
-  // const htmlClientHeight = document.documentElement.clientHeight;
-  // const htmlClientWidth = document.documentElement.clientWidth;
-  // if (top < htmlClientHeight && left < htmlClientWidth) {
-  //   return true;
-  // }
-  // return false;
 };
 
 // 初始状态将图片的路径设置成加载中的图片

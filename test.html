@@ -7,20 +7,65 @@
     <title>Document</title>
   </head>
   <body>
+    <div class="aline">
+      <button
+        @click="handleAction('addCategory')"
+        type="primary"
+        v-if="tableType == 'category'"
+      >
+        新增分类
+      </button>
+    </div>
+    <div class="aline marginR20">
+      <button @click="dowLoadCatalogTemplate" type="primary">下载模板</button>
+    </div>
+    <div class="aline">
+      <Upload
+        :before-upload="handelBeforeUpload"
+        :disabled="uploading"
+        :show-upload-list="false"
+        class="marginR10"
+        ref="upload"
+      >
+        <button :loading="uploading" type="primary">导入分配</button>
+      </Upload>
+    </div>
     <script>
-      // Create WebSocket connection.
-      const socket = new WebSocket("wss://dev.keledge.com:40566/ChatHub");
-      console.log(socket);
-      // Connection opened
-      socket.addEventListener("open", function (event) {
-        socket.send("Hello Server!");
-      });
-
-      // Listen for messages
-      socket.addEventListener("message", function (event) {
-        console.log("Message from server ", event);
-      });
-
+        // 下载分类模板
+        dowLoadCatalogTemplate() {
+        this.$http.post("/resource/php/config/cateDownLoad", {}).then((res) => {
+          if (res.data.Success) {
+            this.createAElementToDowload(res.data.Data.Url);
+          }
+        });
+      },
+      /*
+        导入
+      */
+      handelBeforeUpload(file) {
+        this.$uploadFile({
+          url: "/resource/php/import/importHierarchy",
+          file,
+          progressCallback: () => {
+            this.uploading = true;
+          },
+          sucCallback: (res) => {
+            if (res.Success) {
+              this.uploading = false;
+              this.$Message.success("导入成功");
+              this.getDataList();
+            } else {
+              this.uploading = false;
+              this.$Message.error(res.Description ? res.Description : "导入失败");
+            }
+          },
+          errorCallback: () => {
+            this.uploading = false;
+            this.$Message.error("导入失败");
+          },
+        });
+        return false;
+      },
     </script>
   </body>
 </html>
