@@ -19,7 +19,7 @@
         </div>
       </div> -->
       <div class="aline">
-        <Tabs v-model="tabName">
+        <Tabs v-model="tabName" :draggable="true">
           <TabPane label="首页" name="name1">首页</TabPane>
           <TabPane label="图书详情页" name="name2" disabled>图书详情页</TabPane>
           <TabPane label="个人主页" name="name3">个人主页</TabPane>
@@ -33,9 +33,9 @@
 
 <script>
 import { createPopper } from "@popperjs/core";
-import { Tabs, TabPane } from "@/components/Tabs";
+// import { Tabs, TabPane } from "@/components/Tabs";
 export default {
-  components: { Tabs, TabPane },
+  // components: { Tabs, TabPane },
   data() {
     return {
       current: -1,

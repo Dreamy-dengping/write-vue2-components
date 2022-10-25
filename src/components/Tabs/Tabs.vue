@@ -4,7 +4,12 @@
       <div
         v-for="(item, index) in tabNavList"
         @click.stop="handleTabNavClick(item, index)"
-        :class="['tab-nav-item', item.name == activeName ? 'active' : '']"
+        :class="[
+          'tab-nav-item',
+          item.name == activeName ? 'active' : '',
+          item.disabled ? 'disbled' : '',
+        ]"
+        @drag="handleDrag"
         ref="tabNavItemRefs"
       >
         <span v-if="item.text">{{ item.text }}</span>
@@ -66,10 +71,11 @@ export default {
         text: type == "function" ? "" : label,
         renderFun: type == "function" ? label : "",
         name: tabsPaneInstance.name,
+        disabled: tabsPaneInstance.disabled,
       });
     },
     handleTabNavClick(item, index) {
-      if (item.name == this.activeName) return;
+      if (item.name == this.activeName || item.disabled) return;
       this.activeName = item.name;
       this.currentIndex = index;
       // 计算滚动滑块的宽度
@@ -81,6 +87,10 @@ export default {
       this.trackLineWidht = scrollWidth;
       this.left = tabNavItemRefsList[this.currentIndex].offsetLeft;
     },
+    // 拖拽
+    handleDrag(){
+      
+    }
   },
 };
 </script>
@@ -95,10 +105,12 @@ export default {
       cursor: pointer;
       line-height: 2;
     }
+    .tab-nav-item.disbled {
+      color: #ccc;
+      cursor: default;
+    }
   }
-  .tab-nav-item.active {
-    // border-bottom: 1px solid red;
-  }
+
   .tab-nav-track {
     width: 100%;
     position: relative;
@@ -108,6 +120,9 @@ export default {
       position: absolute;
       transition: left 0.35s;
     }
+  }
+  .tab-content-wrap {
+    margin-top: 12px;
   }
 }
 </style>
