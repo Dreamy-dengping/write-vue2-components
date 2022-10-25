@@ -26,6 +26,7 @@
           <TabPane :label="labelRender" name="name4">购物车</TabPane>
         </Tabs>
       </div>
+      哈哈哈哈
       哎呀
       <!-- <button @click="handleBtnClick">操作</button> -->
     </div>
@@ -47,6 +48,7 @@ export default {
         return h("div", "购物车");
       },
       show: true,
+      showModal: false,
       last: "接维度",
     };
   },
