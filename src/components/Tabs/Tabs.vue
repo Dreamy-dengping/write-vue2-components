@@ -155,6 +155,7 @@ export default {
             this.computedTrackWidth();
           });
         }
+        // 这里还可以根据需要，发布一个拖拽完成事件
       }
     },
     // 交换tab数据项
