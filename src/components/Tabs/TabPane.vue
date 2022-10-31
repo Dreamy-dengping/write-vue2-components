@@ -11,12 +11,15 @@
 <script>
 export default {
   props: {
+    // tab项的文本或者render函数
     label: {
       type: [String, Function],
     },
+    // 每项标识
     name: {
       type: String,
     },
+    // 是否禁用当前项
     disabled: {
       type: Boolean,
       default: false,
@@ -27,17 +30,10 @@ export default {
       paneTransitionName: "enter-right",
     };
   },
-  components: {
-    TabPane: {
-      render() {
-        return this.$slots.default;
-      },
-    },
-  },
   created() {
+    // 统一tab的数据给父组件进行处理和渲染
     this.$parent.setTabBar(this);
   },
-  methods: {},
 };
 </script>
 

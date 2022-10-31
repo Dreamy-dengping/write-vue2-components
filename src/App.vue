@@ -19,15 +19,13 @@
         </div>
       </div> -->
       <div class="aline">
-        <Tabs v-model="tabName">
+        <Tabs v-model="tabName" show-track-bg>
           <TabPane label="首页" name="name1">首页</TabPane>
           <TabPane label="图书详情页" name="name2" disabled>图书详情页</TabPane>
           <TabPane label="个人主页" name="name3">个人主页</TabPane>
           <TabPane :label="labelRender" name="name4">购物车</TabPane>
         </Tabs>
       </div>
-      哈哈哈哈
-      哎呀
       <!-- <button @click="handleBtnClick">操作</button> -->
     </div>
   </div>
