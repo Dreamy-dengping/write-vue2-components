@@ -147,7 +147,12 @@ export default {
           // 记住，数据更新为异步操作，因此我们这里需要用到nextTick，将计算任务放到渲染任务完成之后执行，避免计算不准确
           this.$nextTick(() => {
             this.computedTrackWidth();
-            // this.dragStartIndex = null;
+            this.dragStartIndex = null;
+          });
+        } else {
+          // 不是点击拖拽当前活跃项，也要重新计算滑块跨度和位置，因为每个tab项的宽度不一致，因此，每次拖拽都需要重新计算
+          this.$nextTick(() => {
+            this.computedTrackWidth();
           });
         }
       }
