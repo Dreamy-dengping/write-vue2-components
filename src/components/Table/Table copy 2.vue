@@ -1,62 +1,60 @@
 <template>
   <div class="gnip-table" ref="gnipTable">
-    <div class="overflow-wrap" ref="overflowWrap" :style="{ width: initTableWidth + 'px' }">
-      <div class="table-wrap" :style="{ width: dynamicTableWidth + 'px' }">
-        <table :style="{ width: dynamicTableWidth + 'px' }">
-          <!--  标签用于对表格中的列进行组合，以便对其进行格式化。 -->
-          <colgroup>
-            <col
-              :width="item.width || columnDefault"
-              v-for="(item, index) in column"
-              :key="index"
-              ref="colgroupItems"
-            />
-          </colgroup>
-          <!-- 表头 -->
-          <thead>
-            <tr>
-              <th v-for="(item, index) in column" :key="index" class="gnip-th">
-                <span class="cell-title">{{ item.title }}</span>
-                <span
-                  class="drag-line"
-                  @mousedown="handleMouseDown(index, $event)"
-                ></span>
-              </th>
-            </tr>
-          </thead>
-          <!-- 表体 -->
-          <tbody v-if="data.length">
-            <tr v-for="(dataColumn, dataIndex) in data" :key="data.Id">
-              <td v-for="(item, index) in column" :key="index">
-                <div class="content-cel" v-if="item.slot">
-                  <slot
-                    :name="item.slot"
-                    v-bind:row="dataColumn"
-                    v-bind:index="dataIndex"
-                  ></slot>
-                </div>
-                <div class="content-cel" v-else>
-                  {{ dataColumn[item.key] }}
-                </div>
-              </td>
-            </tr>
-          </tbody>
-          <tfoot v-if="!data.length">
-            <tr>
-              <td :colspan="column.length">
-                <div class="data-empty">暂无数据</div>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      <!-- 拖拽线 -->
-        <div
-          class="drag-resize-line"
-          :style="computedResizeLineStyle"
-          v-if="showDragResizeLine"
-        ></div>
-      </div>
+    <div class="table-wrap" :style="{ width: initTableWidth + 'px' }">
+      <table :style="{ width: dynamicTableWidth + 'px' }">
+        <!--  标签用于对表格中的列进行组合，以便对其进行格式化。 -->
+        <colgroup>
+          <col
+            :width="item.width || columnDefault"
+            v-for="(item, index) in column"
+            :key="index"
+            ref="colgroupItems"
+          />
+        </colgroup>
+        <!-- 表头 -->
+        <thead>
+          <tr>
+            <th v-for="(item, index) in column" :key="index" class="gnip-th">
+              <span class="cell-title">{{ item.title }}</span>
+              <span
+                class="drag-line"
+                @mousedown="handleMouseDown(index, $event)"
+              ></span>
+            </th>
+          </tr>
+        </thead>
+        <!-- 表体 -->
+        <tbody v-if="data.length">
+          <tr v-for="(dataColumn, dataIndex) in data" :key="data.Id">
+            <td v-for="(item, index) in column" :key="index">
+              <div class="content-cel" v-if="item.slot">
+                <slot
+                  :name="item.slot"
+                  v-bind:row="dataColumn"
+                  v-bind:index="dataIndex"
+                ></slot>
+              </div>
+              <div class="content-cel" v-else>
+                {{ dataColumn[item.key] }}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot v-if="!data.length">
+          <tr>
+            <td :colspan="column.length">
+              <div class="data-empty">暂无数据</div>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
+    <!-- 拖拽线 -->
+    <div
+      class="drag-resize-line"
+      :style="computedResizeLineStyle"
+      v-if="showDragResizeLine"
+    ></div>
   </div>
 </template>
 
@@ -175,16 +173,14 @@ export default {
       let parent = targetEle.offsetParent;
       let left = targetEle.offsetLeft;
       while (parent) {
-        if (parent == this.$refs.overflowWrap) {
+        if (parent == this.$refs.gnipTable) {
           // 说明找到了外层相对定位的父级
           break;
         }
         left += parent.offsetLeft;
         parent = parent.offsetParent;
       }
-      // 如果出现了水平滚动条，要加上水平滚动条卷走的宽度
-      this.dragLineLeft = left + this.$refs.overflowWrap.scrollLeft;
-      // console.log(this.$refs.)
+      this.dragLineLeft = left;
       // 记录按下刚开始拖拽的时候的位置
       !this.activeDragStartIndexOffsetLeft && (this.activeDragStartIndexOffsetLeft = left);
       return left;
@@ -192,7 +188,7 @@ export default {
     // 拖拽中计算偏移量
     computedDragLineOffsetDraging(event) {
       let clientX = event.clientX;
-      let targetEle = this.$refs.overflowWrap;
+      let targetEle = this.$refs.gnipTable;
       let x = targetEle.offsetLeft;
       let parent = targetEle.offsetParent;
       while (parent) {
@@ -200,7 +196,7 @@ export default {
         parent = parent.offsetParent;
       }
       let left = clientX - x < 0 ? 0 : clientX - x;
-      this.dragLineLeft = left + this.$refs.overflowWrap.scrollLeft;;
+      this.dragLineLeft = left;
     },
     // 计算表头列的宽度
     setColGroupItemWidth() {
@@ -248,10 +244,6 @@ export default {
 .gnip-table {
   position: relative;
   .table-wrap {
-    // overflow: auto;
-  }
-  .overflow-wrap{
-    position: relative;
     overflow: auto;
   }
   table {

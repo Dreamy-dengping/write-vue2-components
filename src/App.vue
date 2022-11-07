@@ -1,14 +1,14 @@
 <template>
   <div class="app">
     <div class="table">
-      <my-table :data="data" :column="column">
+      <Table :data="data" :column="column">
         <template v-slot:operate="{ row, index }">
           <button>操作{{ index }}</button>
         </template>
-      </my-table>
+      </Table>
     </div>
-    <!-- <div class="table">
-      <Table :columns="column" :data="data" border>
+    <!-- <div class="table" :style="{width:800+'px'}">
+      <Table  :columns="column" :data="data" border>
          <template v-slot:operate="{ row, index }">
            <button>操作{{index}}</button>
         </template>
@@ -19,10 +19,9 @@
 </template>
 
 <script>
-import { Anchor, AnchorLink } from "@/components/Tabs";
-import { Table as MyTable } from "@/components/Table";
+import { Table } from "@/components/Table";
 export default {
-  components: { Anchor, AnchorLink, MyTable },
+  components: { Table },
   data() {
     return {
       data: [
@@ -32,24 +31,32 @@ export default {
             "小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰小杰",
           age: 12,
           sex: "男",
+          address: "重庆",
+          job: "教师",
         },
         {
           id: 2,
           title: "小明",
           age: 12,
           sex: "男",
+          address: "四川",
+          job: "教师",
         },
         {
           id: 3,
           title: "小雅",
           age: 12,
           sex: "女",
+          address: "南宁",
+          job: "程序员",
         },
         {
           id: 4,
           title: "小丽",
           age: 12,
           sex: "女",
+          address: "北京",
+          job: "学生",
         },
       ],
       column: [
@@ -57,27 +64,35 @@ export default {
           title: "姓名",
           key: "title",
           width: "200",
+          fixed: "left",
           resizable: true,
         },
         {
           title: "年龄",
           key: "age",
           resizable: true,
+          width: "300",
         },
         {
           title: "性别",
           key: "sex",
           resizable: true,
-          width: "300",
+          width: "200",
         },
         {
           title: "id",
           key: "id",
+
           resizable: true,
         },
         {
-          title: "年龄",
-          key: "age",
+          title: "地址",
+          key: "address",
+          resizable: true,
+        },
+        {
+          title: "职业",
+          key: "job",
           resizable: true,
         },
         {
