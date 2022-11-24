@@ -1,95 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-      body {
-        /* Prevent the user selecting text in the example */
-        user-select: none;
-      }
 
-      #draggable {
-        text-align: center;
-        background: white;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
 
-      .dropzone {
-        width: 200px;
-        height: 20px;
-        background: blueviolet;
-        margin: 10px;
-        padding: 10px;
-      }
-
-      .dropzone.dragover {
-        background-color: purple;
-      }
-
-      .dragging {
-        opacity: 0.5;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="dropzone">
-      <div id="draggable" draggable="true">这个 div 可以拖动</div>
-    </div>
-    <div class="dropzone" id="droptarget"></div>
-  </body>
-
+<body>
   <script>
-    let dragged;
-    const source = document.getElementById("draggable");
-    const target = document.getElementById("droptarget");
-
-    source.addEventListener("drag", (event) => {
-      console.log("dragging");
-    });
-
-    source.addEventListener("dragstart", (event) => {
-      dragged = event.target;
-      event.target.classList.add("dragging");
-      console.log("dragging");
-    });
-
-    source.addEventListener("dragend", (event) => {
-      event.target.classList.remove("dragging");
-      console.log("dragend");
-    });
-
-    target.addEventListener(
-      "dragover",
-      (event) => {
-        event.preventDefault();
-      },
-      false
-    );
-
-    target.addEventListener("dragenter", (event) => {
-      console.log("dragenter");
-      if (event.target.classList.contains("dropzone")) {
-        event.target.classList.add("dragover");
+    let arr = [34, 12, 3, 1, 7, 10, 2, 15];
+    // 冒泡排序
+    function bubbleSort(arr) {
+      let len = arr.length;
+      for (let i = len - 1; i >= 0; i--) {
+        for (let j = 0; j <= i; j++) {
+          if (arr[j] > arr[j + 1]) {
+            swap(arr, j, j + 1);
+          }
+        }
       }
-    });
-
-    target.addEventListener("dragleave", (event) => {
-      console.log("dragleave");
-      if (event.target.classList.contains("dropzone")) {
-        event.target.classList.remove("dragover");
+      function swap(arr, i, j) {
+        let temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
       }
-    });
-
-    target.addEventListener("drop", (event) => {
-      event.preventDefault();
-      console.log("drop");
-      if (event.target.classList.contains("dropzone")) {
-        event.target.classList.remove("dragover");
-        dragged.parentNode.removeChild(dragged);
-        event.target.appendChild(dragged);
+      return arr;
+    }
+    // 插入排序
+    function insertSort(arr) {
+      let len = arr.length;
+      for (let i = 1; i < len; i++) {
+        let now = i;
+        let prev = i - 1;
+        while (prev >= 0) {
+          if (arr[now] < arr[prev]) {
+            swap(arr, now, prev)
+            now--;
+            prev--;
+          } else {
+            break;
+          }
+        }
       }
-    });
+      function swap(arr, i, j) {
+        let temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+      return arr;
+    }
+    // 选择排序
+    function selectSort(arr) {
+      let len = arr.length;
+      for (let i = 0; i < len; i++) {
+        let minIndex = i;
+        for (let j = i + 1; j < len; j++) {
+          if (arr[j] < arr[minIndex]) {
+            minIndex = j;
+          }
+        }
+        swap(arr, i, minIndex)
+      }
+      function swap(arr, i, j) {
+        let temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+      return arr;
+    }
+    // 希尔排序
+    function shellSort(arr) {
+      let len = arr.length;
+      //gap：分组的依据，gap的值每减小一次，排序就会越接近有序
+      let gap = Math.floor(len / 2);
+      while (gap > 1) {
+        //当gap的值为1时，排序就相当于直接插入排序
+
+
+
+        gap = Math.floor(gap / 2);
+      }
+      function swap(arr, i, j) {
+        let temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+      return arr;
+    }
+    // 快速排序
+    function quickSort(arr) {
+      if (!arr.length) return [];
+      let leftArr = [];
+      let rightArr = [];
+      let cur = arr[0];
+      for (let i = 1; i < arr.length; i++) {
+        if (arr[i] > cur) {
+          rightArr.push(arr[i])
+        } else {
+          leftArr.push(arr[i])
+        }
+      }
+      return [...quickSort(leftArr), cur, ...quickSort(rightArr)]
+    }
+    // 堆排序(大顶堆)
+    function bigHeapSort(arr) {
+      let len = arr.length;
+      // 大顶堆序列化
+      function heapify(arr, len, index) {
+        let max = index;
+        let leftNodeIndex = index * 2 + 1;
+        let rightNodeIndex = index * 2 + 2;
+        if (leftNodeIndex < len && arr[leftNodeIndex] > arr[max]) {
+          max = leftNodeIndex;
+        }
+        if (rightNodeIndex < len && arr[rightNodeIndex] > arr[max]) {
+          max = rightNodeIndex;
+        }
+        // 父节点比两个子节点任意一个小，进行交换，递归维护大顶堆的特性
+        if (max != index) {
+          swap(arr, index, max);
+          heapify(arr, len, max);
+        }
+      }
+      // 构建大顶堆
+      for (let i = Math.floor((len - 1) / 2); i >= 0; i--) {
+        heapify(arr, len, i);
+      }
+      // 每次和后面一个元素交换，这样堆顶的元素就跑到后面去了
+      for (let j = len - 1; j > 0; j--) {
+        swap(arr, j, 0);
+        heapify(arr, j, 0);
+      }
+      function swap(arr, i, j) {
+        let temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+      return arr;
+    }
+    // 堆排序(小顶堆)
+    function smallHeapSort(arr) {
+      let len = arr.length;
+      // 大顶堆序列化
+      function heapify(arr, len, index) {
+        let min = index;
+        let leftNodeIndex = index * 2 + 1;
+        let rightNodeIndex = index * 2 + 2;
+        if (leftNodeIndex < len && arr[leftNodeIndex] < arr[min]) {
+          min = leftNodeIndex;
+        }
+        if (rightNodeIndex < len && arr[rightNodeIndex] < arr[min]) {
+          min = rightNodeIndex;
+        }
+        // 父节点比两个子节点任意一个小，进行交换，递归维护大顶堆的特性
+        if (min != index) {
+          swap(arr, index, min);
+          heapify(arr, len, min);
+        }
+      }
+      // 构建大顶堆
+      for (let i = Math.floor((len - 1) / 2); i >= 0; i--) {
+        heapify(arr, len, i);
+      }
+      // 每次和后面一个元素交换，这样堆顶的元素就跑到后面去了
+      for (let j = len - 1; j > 0; j--) {
+        swap(arr, j, 0);
+        heapify(arr, j, 0);
+      }
+      function swap(arr, i, j) {
+        let temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+      return arr;
+    }
+    // 归并排序
+    function mergeSort(arr) {
+      // 递归函数
+      function merge(arr) {
+        if (arr.length <= 1) return arr;
+        let left = 0;
+        let middle = Math.floor((arr.length - 1) / 2);
+        let right = arr.length;
+        let leftArr = merge(arr.slice(left, middle + 1));
+        let rightArr = merge(arr.slice(middle + 1, right));
+        // 分而治之，进行回溯合并两个有序数据
+        return helper(leftArr, rightArr);
+      }
+      // 用于排列两个有序数组
+      function helper(arr1, arr2) {
+        let res = [];
+        let i = 0;
+        let j = 0;
+        while (i < arr1.length && j < arr2.length) {
+          if (arr1[i] <= arr2[j]) {
+            res.push(arr1[i]);
+            i++;
+          } else {
+            res.push(arr2[j]);
+            j++;
+          }
+        }
+        if (i != arr1.length) {
+          for (let m = i; m < arr1.length; m++) {
+            res.push(arr1[m])
+          }
+        }
+        if (j != arr2.length) {
+          for (let n = j; n < arr2.length; n++) {
+            res.push(arr2[n])
+          }
+        }
+        return res;
+      }
+      return merge(arr);
+    }
+    // 计数排序
+    function countSort(arr) {
+      let list = [];
+      let res = [];
+      let len = arr.length;
+      for (let i = 0; i < len; i++) {
+        list[arr[i]] = list[arr[i]] != undefined ? list[arr[i]] + 1 : 1;
+      }
+      for (let j = 0; j < list.length; j++) {
+        let count = list[j];
+        while (count > 0) {
+          res.push(j)
+          count--;
+        }
+      }
+      return res
+    }
+    // 桶排序
+    function bucketsort(arr) {
+      // 计算最大值，最小值
+      let max = min = arr[0];
+      let len = arr.length;
+      for (let i = 0; i < len; i++) {
+        max = Math.max(max, arr[i])
+        min = Math.min(min, arr[i])
+      }
+      // 计算桶的数量
+      // [3, 1, 7, 10, 2, 3, 6, 5, 4, 2];
+      let bucketNum = Math.floor((max - min) / arr.length) + 1;
+      // 通过二维数组保存桶元素
+      let bucketList = new Array(bucketNum).fill(0).map(item => []);
+      // 将数组元素放到对应的桶当中
+      for (let j = 0; j < len; j++) {
+        // 计算当前元素对应桶的索引位置,将当前元素放到正确的桶当中
+        let bucketIndex = Math.floor((arr[j] - min) / len);
+        bucketList[bucketIndex].push(arr[j]);
+      }
+      // 对桶中的元素进行排序
+      for (let k = 0; k < bucketList.length; k++) {
+        bubbleSort(bucketList[k])
+      }
+      // 拆分输出
+      return bucketList.flat(1);
+    }
+    // 基数排序 
+    function radixSort(arr) {
+      // 初始化桶
+      let radixList = new Array(10).fill(0).map(item => []);
+      // 结果
+      let res = arr;
+      // 最大值
+      let max = Math.max(...arr);
+      // 最大值的位数
+      let maxLen = max.toString().length;
+      // 数组长度
+      let len = arr.length;
+      // 初始索引
+      let init = 1;
+      while (init <= maxLen) {
+        // 重置桶中数据
+        radixList = new Array(10).fill(0).map(item => []);
+        // 依次对个十百各个数位进行重新排列
+        for (let i = 0; i < len; i++) {
+          let currentDigitalString = res[i].toString();
+          let currentDigitalStringLen = currentDigitalString.length;
+          let currentDigitalNumber = currentDigitalStringLen >= init ? currentDigitalString[currentDigitalStringLen - init] * 1 : 0;
+          radixList[currentDigitalNumber].push(res[i]);
+        }
+        // 从新排列数组
+        res = [];
+        for (let i = 0; i < radixList.length; i++) {
+          let currentLen = radixList[i].length;
+          if (currentLen) {
+            for (let j = 0; j < currentLen; j++) {
+              res.push(radixList[i][j])
+            }
+          }
+        }
+        init++;
+      }
+      return res;
+    }
+    console.log(mergeSort(arr));
+    // console.log(arr);
   </script>
+</body>
+
 </html>

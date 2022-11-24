@@ -1,18 +1,23 @@
 {
-  "name": "vue2-demon",
+  "name": "vue2-components-test",
   "version": "0.1.0",
-  "private": true,
+  "description": "用于图片懒加载使用",
+  "main": "./index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "lib": "vue-cli-service build --target lib --name gnip-lazy-load  ./index.js"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.6",
     "async-validator": "^4.2.5",
+    "bytemd": "^1.17.4",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.9",
     "getmac": "^5.20.0",
+    "gnip-vue2-lazy-load": "^1.0.0",
+    "html2canvas": "^1.4.1",
     "velocity-animate": "^1.5.2",
     "view-design": "^4.7.0",
     "vue": "^2.6.11",

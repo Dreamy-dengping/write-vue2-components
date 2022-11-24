@@ -23,7 +23,7 @@ export default class ImageItemClass {
       this.el.onload = () => {
         resolve();
         // 为了更好的用户体验，这里将图片的透明度进行过渡
-        this.el.style.opacity = '0';
+        this.el.style.opacity = "0";
         // this.el.style.transition = `opacity ${this.transitionTime}s`;
         this.addTransition();
       };
@@ -42,8 +42,10 @@ export default class ImageItemClass {
   // 添加过渡
   addTransition() {
     requestAnimationFrame(() => {
-      !this.loadingError ? (this.el.style.transition = `opacity ${1.2}s ease-in-out`) : null;
-      this.el.style.opacity = '1';
+      !this.loadingError
+        ? (this.el.style.transition = `opacity ${1.2}s ease-in-out`)
+        : null;
+      this.el.style.opacity = "1";
     });
   }
 }

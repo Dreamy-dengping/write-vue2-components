@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@bytemd/plugin-gfm": "^1.17.4"
+  }
+}

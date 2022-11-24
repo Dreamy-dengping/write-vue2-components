@@ -1,4 +1,4 @@
-import loadingSrc from './img/loading.jpg';
+import loadingSrc from "../../assets/img/loading.jpg";
 /**
  * @Description 判断dom元素是否到达可视区
  * @Author Galaxy
@@ -25,15 +25,11 @@ export const checkEnterView = (imgInstance, scrollParent) => {
   if (y < parentHeight && x < parentWidth) {
     return true;
   }
-  // // 只考虑y轴
-  // if (y < parentHeight) {
-  //   return true;
-  // }
   return false;
 };
 
 // 初始状态将图片的路径设置成加载中的图片
-export const initLoadImg = el => {
+export const initLoadImg = (el) => {
   el.src = loadingSrc;
 };
 
@@ -46,7 +42,7 @@ export const initLoadImg = el => {
  **/
 export const debounce = (fn, time) => {
   let timer = null;
-  return function(...arg) {
+  return function (...arg) {
     if (timer) {
       clearTimeout(timer);
     }
@@ -65,7 +61,7 @@ export const debounce = (fn, time) => {
  **/
 export const throttle = (fn, time, immediate = true) => {
   let oldTime = new Date();
-  return function(...arg) {
+  return function (...arg) {
     if (immediate) {
       fn.apply(this, ...arg);
       immediate = false;
