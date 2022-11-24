@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="table" ref="table">
+    <div class="table" ref="table" style="margin-top:4000px">
       <ul>
         <li v-for="(item, index) in imgList"><img v-lazy="item" /></li>
         <!-- <li v-for="(item, index) in imgList"><img v-lazy="item" /></li> -->
